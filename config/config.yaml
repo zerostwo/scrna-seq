@@ -1,0 +1,6 @@
+SAMPLES: {
+  "test_data"
+}
+FEATURE: "IGF2BP2"
+GROUP: "METTL3_group"
+TREATMENT: "positive"

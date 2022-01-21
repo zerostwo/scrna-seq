@@ -1,0 +1,4 @@
+.snakemake/
+.tests/
+resources/
+results/

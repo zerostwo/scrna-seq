@@ -1,0 +1,35 @@
+configfile: "config/config.yaml"
+SAMPLES = config["SAMPLES"]
+GROUP = config["GROUP"]
+FEATURE = config["FEATURE"]
+TREATMENT = config["TREATMENT"]
+
+rule all:
+    input: 
+        expand("results/{sample}/function/GO/{GROUP}.go.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/KEGG/{GROUP}.kegg.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSEA/{GROUP}.hallmark.gsea.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSEA/{GROUP}.c2.gsea.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSEA/{GROUP}.c5.gsea.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/deg/{GROUP}.deg.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSVA/{GROUP}.hallmark.es.matrix.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSVA/{GROUP}.kegg.es.matrix.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSVA/{GROUP}.gobp.es.matrix.rds", sample=SAMPLES, GROUP=GROUP),
+        # expand("results/{sample}/cor/{GROUP}.gene.cor.csv", sample=config["SAMPLES"], GROUP=GROUP),
+        # expand("results/{sample}/cor/{GROUP}.hallmark.cor.csv", sample=SAMPLES, GROUP=GROUP),
+        # expand("results/{sample}/cor/{GROUP}.kegg.cor.csv", sample=SAMPLES, GROUP=GROUP),
+        # expand("results/{sample}/cor/{GROUP}.gobp.cor.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/scenic/{GROUP}/expr_mat.tsv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/scenic/{GROUP}/expr_mat.adjacencies.tsv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/scenic/{GROUP}/regulons.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/scenic/{GROUP}/auc_mtx.csv", sample=SAMPLES, GROUP=GROUP)
+
+# 1. 差异分析
+include: "rules/deg.smk"
+# # 2. 功能注释
+include: "rules/function.smk"
+include: "rules/function_gsva.smk"
+# # 3. 相关性分析
+# include: "rules/cor.smk"
+# # 4. 转录因子预测
+include: "rules/scenic.smk"
