@@ -19,8 +19,6 @@ rule grn:
         "results/{sample}/scenic/{GROUP}/expr_mat.tsv"
     output:
         "results/{sample}/scenic/{GROUP}/expr_mat.adjacencies.tsv"
-    conda:
-        "../envs/pyscenic.yaml"
     log:
         "results/{sample}/logs/{GROUP}.grn.log"
     benchmark:
@@ -28,7 +26,7 @@ rule grn:
     threads: workflow.cores
     shell:
         """
-        pyscenic grn \
+        /opt/anaconda3/envs/pyscenic/bin/pyscenic grn \
             --num_workers {threads} \
             --seed 717 \
             -o {output} \
@@ -42,8 +40,6 @@ rule ctx:
         "results/{sample}/scenic/{GROUP}/expr_mat.tsv"
     output:
         "results/{sample}/scenic/{GROUP}/regulons.csv"
-    conda:
-        "../envs/pyscenic.yaml"
     log:
         "results/{sample}/logs/{GROUP}.ctx.log"
     benchmark:
@@ -51,7 +47,7 @@ rule ctx:
     threads: workflow.cores
     shell:
         """
-        pyscenic ctx \
+        /opt/anaconda3/envs/pyscenic/bin/pyscenic ctx \
             {input[0]} \
             /DATA/public/cisTarget_databases/human/hg19-500bp-upstream-7species.mc9nr.feather \
             /DATA/public/cisTarget_databases/human/hg19-tss-centered-10kb-7species.mc9nr.feather \
@@ -68,8 +64,6 @@ rule aucell:
         "results/{sample}/scenic/{GROUP}/regulons.csv"
     output:
         "results/{sample}/scenic/{GROUP}/auc_mtx.csv"
-    conda:
-        "../envs/pyscenic.yaml"
     log:
         "results/{sample}/logs/{GROUP}.aucell.log"
     benchmark:
@@ -77,7 +71,7 @@ rule aucell:
     threads: workflow.cores
     shell:
         """
-        pyscenic aucell \
+        /opt/anaconda3/envs/pyscenic/bin/pyscenic aucell \
             {input[0]} \
             {input[1]} \
             -o {output} \
