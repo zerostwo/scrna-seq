@@ -1,35 +1,64 @@
+# 导入配置文件
 configfile: "config/config.yaml"
-SAMPLES = config["SAMPLES"]
+SEURAT_OBJ = config["SEURAT_OBJ"]
 GROUP = config["GROUP"]
-FEATURE = config["FEATURE"]
 TREATMENT = config["TREATMENT"]
+P_VALUE = config["P_VALUE"]
+LOG2FC = config["LOG2FC"]
+HALLMAKR_PATH = config["HALLMAKR_PATH"]
+C2_PATH = config["C2_PATH"]
+C5_PATH = config["C5_PATH"]
+C6_PATH = config["C6_PATH"]
+C7_PATH = config["C7_PATH"]
+# 获取根名字
+import os
+SAMPLES = os.path.basename(SEURAT_OBJ).split('.')[0]
 
 rule all:
     input: 
+        # 1. 相关性分析（选择感兴趣的基因）
+        ## 基因与基因之间的表达相关性
+        ## 基因与功能术语的GSVA得分相关性
+        expand("results/{sample}/function/GSVA/{GROUP}.hallmark.gsva.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSVA/{GROUP}.c2.gsva.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSVA/{GROUP}.c5.gsva.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSVA/{GROUP}.c6.gsva.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSVA/{GROUP}.c7.gsva.rds", sample=SAMPLES, GROUP=GROUP),
+        ## 基因与细胞比例的相关性
+        # 2. 差异分析（按照感兴趣的基因表达与否定义为阳性阴性两组）
+        ## 差异表达基因分析
+        expand("results/{sample}/deg/{GROUP}.deg.csv", sample=SAMPLES, GROUP=GROUP),
+        ## 差异表达基因功能富集分析
         expand("results/{sample}/function/GO/{GROUP}.go.csv", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/function/KEGG/{GROUP}.kegg.csv", sample=SAMPLES, GROUP=GROUP),
+        ## 差异表达基因的GSEA
         expand("results/{sample}/function/GSEA/{GROUP}.hallmark.gsea.rds", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/function/GSEA/{GROUP}.c2.gsea.rds", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/function/GSEA/{GROUP}.c5.gsea.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/deg/{GROUP}.deg.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.hallmark.es.matrix.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.kegg.es.matrix.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.gobp.es.matrix.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSEA/{GROUP}.c6.gsea.rds", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/function/GSEA/{GROUP}.c7.gsea.rds", sample=SAMPLES, GROUP=GROUP),
         # expand("results/{sample}/cor/{GROUP}.gene.cor.csv", sample=config["SAMPLES"], GROUP=GROUP),
         # expand("results/{sample}/cor/{GROUP}.hallmark.cor.csv", sample=SAMPLES, GROUP=GROUP),
         # expand("results/{sample}/cor/{GROUP}.kegg.cor.csv", sample=SAMPLES, GROUP=GROUP),
         # expand("results/{sample}/cor/{GROUP}.gobp.cor.csv", sample=SAMPLES, GROUP=GROUP),
+        # 3. 转录调控网络分析
         expand("results/{sample}/scenic/{GROUP}/expr_mat.tsv", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/scenic/{GROUP}/expr_mat.adjacencies.tsv", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/scenic/{GROUP}/regulons.csv", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/scenic/{GROUP}/auc_mtx.csv", sample=SAMPLES, GROUP=GROUP)
 
-# 1. 差异分析
+# 1. 相关性分析（选择感兴趣的基因）
+## 基因与基因之间的表达相关性
+## 基因与功能术语的GSVA得分相关性
+include: "rules/gsva.smk"
+## 基因与细胞比例的相关性
+
+# 2. 差异分析（按照感兴趣的基因表达与否定义为阳性阴性两组）
+## 差异表达基因分析
 include: "rules/deg.smk"
-# # 2. 功能注释
+## 差异表达基因功能富集分析
 include: "rules/function.smk"
-include: "rules/function_gsva.smk"
-# # 3. 相关性分析
-# include: "rules/cor.smk"
-# # 4. 转录因子预测
+## 差异表达基因的GSEA
+
+# 3. 转录调控网络分析
 include: "rules/scenic.smk"

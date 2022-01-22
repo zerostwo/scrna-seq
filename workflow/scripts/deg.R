@@ -43,7 +43,7 @@ positive.group <- groups[which(groups==opt$treatment)]
 negative.group <- groups[which(groups!=opt$treatment)]
 
 #使用FindMarkers函数寻找差异表达基因
-# DefaultAssay(seurat.obj) <- "SCT"
+DefaultAssay(seurat.obj) <- "RNA"
 Idents(seurat.obj) <- "celltype.group"
 deg <- data.frame()
 for (cell.type in cell.types) {

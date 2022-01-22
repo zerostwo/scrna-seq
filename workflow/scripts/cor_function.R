@@ -51,7 +51,7 @@ seurat.obj <-
               metadata = t(es.matrix),
               col.name = rownames(es.matrix))
 seurat.obj$feature_data <-
-  GetAssayData(seurat.obj, slot = "data")[opt$feature, ]
+  GetAssayData(seurat.obj, assay = "RNA",slot = "data")[opt$feature, ]
 
 selected.group <- opt$group # 设定分组
 groups <- names(table(seurat.obj@meta.data[, selected.group]))

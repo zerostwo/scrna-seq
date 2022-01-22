@@ -2,7 +2,7 @@
 ## 1. seurat对象转counts
 rule seurat2counts:
     input:
-        "resources/{sample}.rds"
+        SEURAT_OBJ
     output:
         "results/{sample}/scenic/{GROUP}/expr_mat.tsv"  
     log:

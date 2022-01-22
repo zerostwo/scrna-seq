@@ -2,3 +2,4 @@
 .tests/
 resources/
 results/
+dask-worker-space/

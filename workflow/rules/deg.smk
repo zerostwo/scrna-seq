@@ -1,6 +1,6 @@
 rule deg:
     input:
-        "resources/{sample}.rds"
+        SEURAT_OBJ
     output:
         "results/{sample}/deg/{GROUP}.deg.csv"
     log:
