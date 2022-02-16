@@ -20,6 +20,10 @@ option_list <- list(
     make_option(c("-o", "--output"),
         type = "character", default = FALSE,
         action = "store", help = "Output Path"
+    ),
+    make_option(c("-a", "--assay"),
+        type = "character", default = FALSE,
+        action = "store", help = "Assay"
     )
 )
 opt <- parse_args(OptionParser(
@@ -29,11 +33,11 @@ opt <- parse_args(OptionParser(
 print(opt)
 
 #### Load data ----
-seurat_obj <- readRDS(opt$input)
-DefaultAssay(seurat_obj) <- "RNA"
+SEURAT_OBJ_PATH <- readRDS(opt$input)
+DefaultAssay(SEURAT_OBJ_PATH) <- opt$assay
 
 #### Data processing ----
-counts <- as.matrix(seurat_obj@assays[["RNA"]]@counts)
+counts <- as.matrix(SEURAT_OBJ_PATH@assays[[opt$assay]]@counts)
 counts <- t(counts)
 #### Output data ----
 write.table(cbind(rownames(counts), counts),

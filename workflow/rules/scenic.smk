@@ -2,7 +2,7 @@
 ## 1. seurat对象转counts
 rule seurat2counts:
     input:
-        SEURAT_OBJ
+        SEURAT_OBJ_PATH
     output:
         "results/{sample}/scenic/{GROUP}/expr_mat.tsv"  
     log:
@@ -11,7 +11,7 @@ rule seurat2counts:
         "results/{sample}/benchmark/{GROUP}.seurat2counts.benchmark.txt"
     shell:
         """
-        Rscript workflow/scripts/seurat2count.R -i {input} -o {output} > {log} 2>&1
+        Rscript workflow/scripts/seurat2count.R -i {input} -o {output} -a {ASSAY}> {log} 2>&1
         """
 ## 2. grn
 rule grn:
@@ -23,7 +23,7 @@ rule grn:
         "results/{sample}/logs/{GROUP}.grn.log"
     benchmark:
         "results/{sample}/benchmark/{GROUP}.grn.benchmark.txt"
-    threads: workflow.cores
+    threads: workflow.cores / 2
     shell:
         """
         /opt/anaconda3/envs/pyscenic/bin/pyscenic grn \
@@ -44,7 +44,7 @@ rule ctx:
         "results/{sample}/logs/{GROUP}.ctx.log"
     benchmark:
         "results/{sample}/benchmark/{GROUP}.ctx.benchmark.txt"
-    threads: workflow.cores
+    threads: workflow.cores / 2
     shell:
         """
         /opt/anaconda3/envs/pyscenic/bin/pyscenic ctx \
@@ -68,7 +68,7 @@ rule aucell:
         "results/{sample}/logs/{GROUP}.aucell.log"
     benchmark:
         "results/{sample}/benchmark/{GROUP}.aucell.benchmark.txt"
-    threads: workflow.cores
+    threads: workflow.cores / 2
     shell:
         """
         /opt/anaconda3/envs/pyscenic/bin/pyscenic aucell \

@@ -26,7 +26,11 @@ option_list <- list(
     default = NULL,
     action = "store",
     help = "MSigDB gmt file path"
-  )
+  ),
+    make_option(c("-a", "--assay"),
+        type = "character", default = FALSE,
+        action = "store", help = "Assay"
+    )
 )
 opt <- parse_args(OptionParser(option_list = option_list,
                                usage = "This Script is a test for arguments!"))
@@ -39,12 +43,15 @@ seurat.obj <-
   readRDS(opt$input) # 修改输入路径
 
 expr <-
-  as.matrix(GetAssayData(seurat.obj, assay = "RNA", slot = "counts"))
+  as.matrix(GetAssayData(seurat.obj, assay = opt$assay, slot = "data"))
 es.matrix <- gsva(
   expr,
   s.sets,
-  kcdf = "Poisson",
+  kcdf = "Gaussian",
+  method = "gsva",
+  min.sz = 10,
   verbose = TRUE,
+  tau = 1,
   parallel.sz = 1
 )
 

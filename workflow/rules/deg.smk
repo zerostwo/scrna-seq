@@ -1,6 +1,6 @@
 rule deg:
     input:
-        SEURAT_OBJ
+        SEURAT_OBJ_PATH
     output:
         "results/{sample}/deg/{GROUP}.deg.csv"
     log:
@@ -9,5 +9,5 @@ rule deg:
         "results/{sample}/benchmark/{GROUP}.deg.benchmark.txt"
     shell:
         """
-        Rscript workflow/scripts/deg.R -i {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
+        Rscript workflow/scripts/deg.R -i {input} -o {output} -g {GROUP} -t {TREATMENT} -a {ASSAY}> {log} 2>&1
         """

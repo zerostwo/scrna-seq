@@ -18,6 +18,10 @@ option_list <- list(
     make_option(c("-t", "--treatment"),
         type = "character", default = FALSE,
         action = "store", help = "Positive group"
+    ),
+    make_option(c("-a", "--assay"),
+        type = "character", default = FALSE,
+        action = "store", help = "Assay"
     )
 )
 opt <- parse_args(OptionParser(
@@ -43,7 +47,7 @@ positive.group <- groups[which(groups==opt$treatment)]
 negative.group <- groups[which(groups!=opt$treatment)]
 
 #使用FindMarkers函数寻找差异表达基因
-DefaultAssay(seurat.obj) <- "RNA"
+DefaultAssay(seurat.obj) <- opt$assay
 Idents(seurat.obj) <- "celltype.group"
 deg <- data.frame()
 for (cell.type in cell.types) {

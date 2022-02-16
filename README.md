@@ -1,6 +1,6 @@
 # Snakemake workflow: scrna-seq
 
-[![Snakemake](snakemake-badge)](snakemake-url)
+[![Snakemake][snakemake-badge]](snakemake-url)
 [中文说明][zh-readme-url]
 
 [snakemake-badge]: https://img.shields.io/badge/snakemake-≥6.13.2-brightgreen.svg
@@ -26,12 +26,16 @@ git clone https://github.com/zerostwo/scrna-seq.git
 Configure the workflow according to your needs via editing the file `config.yaml`.
 
 ```yaml
-SAMPLES: {
-  "test_data"
-}
-FEATURE: "METTL3"
-GROUP: "group"
-TREATMENT: "Tumor"
+#### Required ----
+# Absolute path to Seurat object (RDS format)
+SEURAT_OBJ_PATH: "/home/duansq/projects/scrna-m6A/output/01_seurat/test_dc2.rds"
+# Grouping information, ensure that the grouping field exists in the meta.data of the Seurat object, and only contains two groups
+GROUP: "IGF2BP2_group"
+# Set the treatment group in the grouping field
+TREATMENT: "postive"
+
+#### Optional ----
+# ...
 ```
 
 #### Step 3: Execute workflow

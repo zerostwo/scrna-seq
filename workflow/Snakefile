@@ -1,8 +1,9 @@
 # 导入配置文件
 configfile: "config/config.yaml"
-SEURAT_OBJ = config["SEURAT_OBJ"]
+SEURAT_OBJ_PATH = config["INPUT"]
 GROUP = config["GROUP"]
 TREATMENT = config["TREATMENT"]
+ASSAY = config["ASSAY"]
 P_VALUE = config["P_VALUE"]
 LOG2FC = config["LOG2FC"]
 HALLMAKR_PATH = config["HALLMAKR_PATH"]
@@ -10,9 +11,10 @@ C2_PATH = config["C2_PATH"]
 C5_PATH = config["C5_PATH"]
 C6_PATH = config["C6_PATH"]
 C7_PATH = config["C7_PATH"]
+
 # 获取根名字
 import os
-SAMPLES = os.path.basename(SEURAT_OBJ).split('.')[0]
+SAMPLES = os.path.basename(SEURAT_OBJ_PATH).split('.')[0]
 
 rule all:
     input: 

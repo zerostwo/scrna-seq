@@ -35,6 +35,10 @@ option_list <- list(
     make_option(c("-f", "--feature"),
         type = "character", default = FALSE,
         action = "store", help = "Feature"
+    ),
+    make_option(c("-a", "--assay"),
+        type = "character", default = FALSE,
+        action = "store", help = "Assay"
     )
 )
 opt <- parse_args(OptionParser(
@@ -51,7 +55,7 @@ seurat.obj <-
               metadata = t(es.matrix),
               col.name = rownames(es.matrix))
 seurat.obj$feature_data <-
-  GetAssayData(seurat.obj, assay = "RNA",slot = "data")[opt$feature, ]
+  GetAssayData(seurat.obj, assay = opt$assay,slot = "data")[opt$feature, ]
 
 selected.group <- opt$group # 设定分组
 groups <- names(table(seurat.obj@meta.data[, selected.group]))

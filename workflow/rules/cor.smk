@@ -1,6 +1,6 @@
 rule cor_cell_type:
     input:
-        SEURAT_OBJ
+        SEURAT_OBJ_PATH
     output:
         "results/{sample}/cor/{GROUP}.gene.cor.csv"
     log:
@@ -11,7 +11,7 @@ rule cor_cell_type:
         """
 rule cor_hallmark:
     input:
-        SEURAT_OBJ,
+        SEURAT_OBJ_PATH,
         "results/{sample}/function/GSVA/{GROUP}.hallmark.es.matrix.rds"
     output:
         "results/{sample}/cor/{GROUP}.hallmark.cor.csv"
@@ -26,7 +26,7 @@ rule cor_hallmark:
         """
 rule cor_kegg:
     input:
-        SEURAT_OBJ,
+        SEURAT_OBJ_PATH,
         "results/{sample}/function/GSVA/{GROUP}.kegg.es.matrix.rds"
     output:
         "results/{sample}/cor/{GROUP}.kegg.cor.csv"
@@ -42,7 +42,7 @@ rule cor_kegg:
 
 rule cor_gobp:
     input:
-        SEURAT_OBJ,
+        SEURAT_OBJ_PATH,
         "results/{sample}/function/GSVA/{GROUP}.gobp.es.matrix.rds"
     output:
         "results/{sample}/cor/{GROUP}.gobp.cor.csv"
