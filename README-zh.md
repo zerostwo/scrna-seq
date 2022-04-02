@@ -35,12 +35,25 @@ saveRDS(sub.seurat.obj, "./output/01_seurat/test_data.rds")
 直接到`~/scrna-seq/config/config.yaml`路径下修改`config.yaml`文件。
 注意**SAMPLES**内的字符需要和上一步保存的rds文件名一致。
 ```yaml
-SAMPLES: {
-  "test_data"
-}
-FEATURE: "METTL3"
-GROUP: "group"
-TREATMENT: "Tumor"
+#### 必须填写的内容 ----
+# 从R语言里面保存的Seurat对象路径
+INPUT: /home/duansq/datasets/2022_adult-brain-vasc_EthanWinkler/data/am-endothelial/final_merged_ec_cb.rds
+# 分组信息，保证分组字段在Seurat对象的meta.data存在，并且只包含两组
+GROUP: group
+# 设置分组里的试验组
+TREATMENT: AVM
+# 设置Assay
+ASSAY: RNA
+#### 可以选择性更改 ---- 
+# 阈值
+P_VALUE: 0.05
+LOG2FC: 0.25
+# MSigDB path
+HALLMAKR_PATH: /DATA/public/MSigDB/h.all.v7.4.symbols.gmt
+C2_PATH: /DATA/public/MSigDB/c2.all.v7.4.symbols.gmt
+C5_PATH: /DATA/public/MSigDB/c5.all.v7.4.symbols.gmt
+C6_PATH: /DATA/public/MSigDB/c6.all.v7.4.symbols.gmt
+C7_PATH: /DATA/public/MSigDB/c7.all.v7.4.symbols.gmt
 ```
 
 运行snakemake程序

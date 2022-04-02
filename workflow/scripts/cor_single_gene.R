@@ -1,5 +1,5 @@
 #### Information ----
-# Title   :   
+# Title   :
 # File    :   cor_single_gene.R
 # Author  :   Songqi Duan
 # Contact :   songqi.duan@outlook.com
@@ -12,26 +12,26 @@ library(tidyverse)
 library(optparse)
 
 option_list <- list(
-    make_option(c("-i", "--input"),
-        type = "character", default = FALSE,
-        action = "store", help = "Seurat Object"
-    ),
-    make_option(c("-o", "--output"),
-        type = "character", default = FALSE,
-        action = "store", help = "Output Path"
-    ),
-    make_option(c("-g", "--group"),
-        type = "character", default = FALSE,
-        action = "store", help = "Group"
-    ),
-    make_option(c("-f", "--feature"),
-        type = "character", default = FALSE,
-        action = "store", help = "Feature"
-    )
+  make_option(c("-i", "--input"),
+    type = "character", default = FALSE,
+    action = "store", help = "Seurat Object"
+  ),
+  make_option(c("-o", "--output"),
+    type = "character", default = FALSE,
+    action = "store", help = "Output Path"
+  ),
+  make_option(c("-g", "--group"),
+    type = "character", default = FALSE,
+    action = "store", help = "Group"
+  ),
+  make_option(c("-f", "--feature"),
+    type = "character", default = FALSE,
+    action = "store", help = "Feature"
+  )
 )
 opt <- parse_args(OptionParser(
-    option_list = option_list,
-    usage = "This Script is a test for arguments!"
+  option_list = option_list,
+  usage = "This Script is a test for arguments!"
 ))
 print(opt)
 
@@ -53,10 +53,11 @@ for (Group in groups) {
   for (feature in features) {
     # feature <- features[3]
     cor.test.res <-
-      cor.test(expr[opt$feature,],
-               expr[feature,],
-               method = "spearman",
-               exact = F)
+      cor.test(expr[opt$feature, ],
+        expr[feature, ],
+        method = "spearman",
+        exact = F
+      )
     p.value <- cor.test.res$p.value
     estimate <- cor.test.res$estimate
     tmp.res <- rbind(tmp.res, c(feature, p.value, estimate))
@@ -67,6 +68,7 @@ for (Group in groups) {
 }
 
 write.csv(res,
-    opt$output,
-    row.names = F,
-    quote = F)
+  opt$output,
+  row.names = F,
+  quote = F
+)

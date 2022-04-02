@@ -1,11 +1,11 @@
 #### Information ----
-# Title   :   
+# Title   :
 # File    :   function_GSEA.R
 # Author  :   Songqi Duan
 # Contact :   songqi.duan@outlook.com
-# License :   Copyright (C) 2014-2021 by Songqi Duan
+# License :   Copyright (C) 2014-2022 by Songqi Duan
 # Created :   2021/12/13 17:09:13
-# Updated :   none
+# Updated :   2022/02/21 16:45:11
 
 #### 导入包 ----
 library(msigdbr)
@@ -14,22 +14,31 @@ library(tidyverse)
 library(optparse)
 
 option_list <- list(
-    make_option(c("-i", "--input"),
-        type = "character", default = FALSE,
-        action = "store", help = "DEGs csv path"
-    ),
-    make_option(c("-o", "--output"),
-        type = "character", default = FALSE,
-        action = "store", help = "Output Path"
-    ),
-    make_option(c("-c", "--category"),
-        type = "character", default = FALSE,
-        action = "store", help = "MSigDB"
-    )
+  make_option(
+    c("-i", "--input"),
+    type = "character",
+    default = FALSE,
+    action = "store",
+    help = "DEGs csv path"
+  ),
+  make_option(
+    c("-o", "--output"),
+    type = "character",
+    default = FALSE,
+    action = "store",
+    help = "Output Path"
+  ),
+  make_option(
+    c("-c", "--category"),
+    type = "character",
+    default = FALSE,
+    action = "store",
+    help = "MSigDB"
+  )
 )
 opt <- parse_args(OptionParser(
-    option_list = option_list,
-    usage = "This Script is a test for arguments!"
+  option_list = option_list,
+  usage = "This Script is a test for arguments!"
 ))
 print(opt)
 
@@ -46,10 +55,13 @@ cell.types <- names(table(deg$cell_type))
 # C6: oncogenic signature gene sets  defined directly from microarray gene expression data from cancer gene perturbations.
 # C7: immunologic signature gene sets  represent cell states and perturbations within the immune system.
 category <- opt$category
-genesets <- msigdbr(species = "Homo sapiens",
-                    category = category)
+genesets <- msigdbr::msigdbr(
+  species = "Homo sapiens",
+  category = category
+)
 genesets <- subset(genesets,
-                   select = c("gs_name", "gene_symbol"))
+  select = c("gs_name", "gene_symbol")
+)
 
 res <- list()
 for (cell.type in cell.types) {
@@ -60,10 +72,36 @@ for (cell.type in cell.types) {
 
   rownames(filtered.deg) <- filtered.deg$gene
   filtered.deg <-
-    filtered.deg[order(filtered.deg$avg_log2FC, decreasing = T),]
+    filtered.deg[order(filtered.deg$avg_log2FC, decreasing = T), ]
   genelist <-
     structure(filtered.deg$avg_log2FC, names = rownames(filtered.deg))
-  tmp.res <- GSEA(genelist, TERM2GENE = genesets, eps = 0, pvalueCutoff = 1)
-  res[[cell.type]] <- tmp.res
+  result <- tryCatch(
+    {
+      tmp.res <- clusterProfiler::GSEA(
+        genelist,
+        TERM2GENE = genesets,
+        eps = 0,
+        pvalueCutoff = 1,
+        seed = 717
+      )
+    },
+    warning = function(w) {
+      "W"
+    },
+    error = function(e) {
+      "E"
+    }
+  )
+  result
+  if (result != "E") {
+    tmp.res <- clusterProfiler::GSEA(
+      genelist,
+      TERM2GENE = genesets,
+      eps = 0,
+      pvalueCutoff = 1,
+      seed = 717
+    )
+    res[[cell.type]] <- tmp.res
+  }
 }
 saveRDS(res, opt$output)

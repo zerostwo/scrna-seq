@@ -1,22 +1,22 @@
 # 转录调控网络分析
 ## 1. seurat对象转counts
-rule seurat2counts:
+rule seurat2loom:
     input:
         SEURAT_OBJ_PATH
     output:
-        "results/{sample}/scenic/{GROUP}/expr_mat.tsv"  
+        "results/{sample}/scenic/{GROUP}/expr_mat.loom"  
     log:
-        "results/{sample}/logs/{GROUP}.seurat2counts.log"
+        "results/{sample}/logs/{GROUP}.seurat2loom.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.seurat2counts.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.seurat2loom.benchmark.txt"
     shell:
         """
-        Rscript workflow/scripts/seurat2count.R -i {input} -o {output} -a {ASSAY}> {log} 2>&1
+        Rscript workflow/scripts/seurat2loom.R -i {input} -o {output} > {log} 2>&1
         """
 ## 2. grn
 rule grn:
     input:
-        "results/{sample}/scenic/{GROUP}/expr_mat.tsv"
+        "results/{sample}/scenic/{GROUP}/expr_mat.loom"
     output:
         "results/{sample}/scenic/{GROUP}/expr_mat.adjacencies.tsv"
     log:
@@ -37,7 +37,7 @@ rule grn:
 rule ctx:
     input:
         "results/{sample}/scenic/{GROUP}/expr_mat.adjacencies.tsv",
-        "results/{sample}/scenic/{GROUP}/expr_mat.tsv"
+        "results/{sample}/scenic/{GROUP}/expr_mat.loom"
     output:
         "results/{sample}/scenic/{GROUP}/regulons.csv"
     log:
@@ -49,8 +49,8 @@ rule ctx:
         """
         /opt/anaconda3/envs/pyscenic/bin/pyscenic ctx \
             {input[0]} \
-            /DATA/public/cisTarget_databases/human/hg19-500bp-upstream-7species.mc9nr.feather \
-            /DATA/public/cisTarget_databases/human/hg19-tss-centered-10kb-7species.mc9nr.feather \
+            /DATA/public/cisTarget_databases/human/hg38__refseq-r80__10kb_up_and_down_tss.mc9nr.feather \
+            /DATA/public/cisTarget_databases/human/hg38__refseq-r80__500bp_up_and_100bp_down_tss.mc9nr.feather \
             --annotations_fname /DATA/public/cisTarget_databases/human/motifs-v9-nr.hgnc-m0.001-o0.0.tbl \
             --expression_mtx_fname {input[1]} \
             --mode "dask_multiprocessing" \
@@ -60,7 +60,7 @@ rule ctx:
 ## 4. grn
 rule aucell:
     input:
-        "results/{sample}/scenic/{GROUP}/expr_mat.tsv",
+        "results/{sample}/scenic/{GROUP}/expr_mat.loom",
         "results/{sample}/scenic/{GROUP}/regulons.csv"
     output:
         "results/{sample}/scenic/{GROUP}/auc_mtx.csv"

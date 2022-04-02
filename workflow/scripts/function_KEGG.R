@@ -43,8 +43,10 @@ option_list <- list(
     help = "log2FC cutoff"
   )
 )
-opt <- parse_args(OptionParser(option_list = option_list,
-                               usage = "This Script is a test for arguments!"))
+opt <- parse_args(OptionParser(
+  option_list = option_list,
+  usage = "This Script is a test for arguments!"
+))
 print(opt)
 
 #### 导入数据 ----
@@ -61,9 +63,11 @@ for (cell.type in cell.types) {
   # cell.type <- cell.types[1]
   # 上调基因GO
   upregulated.top.genes <- deg %>%
-    filter(cell_type == cell.type,
-           avg_log2FC >= opt$log2fc)
-  
+    filter(
+      cell_type == cell.type,
+      avg_log2FC >= opt$log2fc
+    )
+
   convert <- bitr(
     upregulated.top.genes$gene,
     fromType = "SYMBOL",
@@ -71,29 +75,33 @@ for (cell.type in cell.types) {
     OrgDb = org.Hs.eg.db
   )
   top.genes <- convert$ENTREZID
-  
+
   ego <- enrichKEGG(
     gene = top.genes,
     keyType = "kegg",
-    organism  = 'hsa',
+    organism = "hsa",
     # human: hsa, mouse: mmu
-    pvalueCutoff  = 0.05,
-    pAdjustMethod  = "BH",
-    qvalueCutoff  = 0.2,
+    pvalueCutoff = 0.05,
+    pAdjustMethod = "BH",
+    qvalueCutoff = 0.2,
   )
-  
+
   upregulated.tmp.term <- ego@result
   upregulated.tmp.term$celltype <- cell.type
   upregulated.tmp.term$regulated <- "upregulated"
-  
-  term <- rbind(term,
-                upregulated.tmp.term)
-  
+
+  term <- rbind(
+    term,
+    upregulated.tmp.term
+  )
+
   # 下调基因GO
   downregulated.top.genes <- deg %>%
-    filter(cell_type == cell.type,
-           avg_log2FC <= -opt$log2fc)
-  
+    filter(
+      cell_type == cell.type,
+      avg_log2FC <= -opt$log2fc
+    )
+
   convert <- bitr(
     downregulated.top.genes$gene,
     fromType = "SYMBOL",
@@ -101,25 +109,28 @@ for (cell.type in cell.types) {
     OrgDb = org.Hs.eg.db
   )
   top.genes <- convert$ENTREZID
-  
+
   ego <- enrichKEGG(
     gene = top.genes,
     keyType = "kegg",
-    organism  = 'hsa',
+    organism = "hsa",
     # human: hsa, mouse: mmu
-    pvalueCutoff  = 0.05,
-    pAdjustMethod  = "BH",
-    qvalueCutoff  = 0.2,
+    pvalueCutoff = 0.05,
+    pAdjustMethod = "BH",
+    qvalueCutoff = 0.2,
   )
   downregulated.tmp.term <- ego@result
   downregulated.tmp.term$celltype <- cell.type
   downregulated.tmp.term$regulated <- "downregulated"
-  
-  term <- rbind(term,
-                downregulated.tmp.term)
+
+  term <- rbind(
+    term,
+    downregulated.tmp.term
+  )
 }
 
 write.csv(term,
-          file = opt$output,
-          row.names = F,
-          quote = T)
+  file = opt$output,
+  row.names = F,
+  quote = T
+)

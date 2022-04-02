@@ -1,5 +1,5 @@
 #### Information ----
-# Title   :   
+# Title   :
 # File    :   cor_function.R
 # Author  :   Songqi Duan
 # Contact :   songqi.duan@outlook.com
@@ -12,38 +12,38 @@ library(tidyverse)
 library(optparse)
 
 option_list <- list(
-    make_option(c("-i", "--input"),
-        type = "character", default = FALSE,
-        action = "store", help = "Seurat Object"
-    ),
-    make_option(c("-o", "--output"),
-        type = "character", default = FALSE,
-        action = "store", help = "Output Path"
-    ),
-    make_option(c("-p", "--prefix"),
-        type = "character", default = FALSE,
-        action = "store", help = "Group"
-    ),
-    make_option(c("-e", "--esmatrix"),
-        type = "character", default = FALSE,
-        action = "store", help = "es.matrix"
-    ),
-    make_option(c("-g", "--group"),
-        type = "character", default = FALSE,
-        action = "store", help = "Group"
-    ),
-    make_option(c("-f", "--feature"),
-        type = "character", default = FALSE,
-        action = "store", help = "Feature"
-    ),
-    make_option(c("-a", "--assay"),
-        type = "character", default = FALSE,
-        action = "store", help = "Assay"
-    )
+  make_option(c("-i", "--input"),
+    type = "character", default = FALSE,
+    action = "store", help = "Seurat Object"
+  ),
+  make_option(c("-o", "--output"),
+    type = "character", default = FALSE,
+    action = "store", help = "Output Path"
+  ),
+  make_option(c("-p", "--prefix"),
+    type = "character", default = FALSE,
+    action = "store", help = "Group"
+  ),
+  make_option(c("-e", "--esmatrix"),
+    type = "character", default = FALSE,
+    action = "store", help = "es.matrix"
+  ),
+  make_option(c("-g", "--group"),
+    type = "character", default = FALSE,
+    action = "store", help = "Group"
+  ),
+  make_option(c("-f", "--feature"),
+    type = "character", default = FALSE,
+    action = "store", help = "Feature"
+  ),
+  make_option(c("-a", "--assay"),
+    type = "character", default = FALSE,
+    action = "store", help = "Assay"
+  )
 )
 opt <- parse_args(OptionParser(
-    option_list = option_list,
-    usage = "This Script is a test for arguments!"
+  option_list = option_list,
+  usage = "This Script is a test for arguments!"
 ))
 print(opt)
 
@@ -52,10 +52,11 @@ es.matrix <-
   readRDS(opt$esmatrix)
 seurat.obj <-
   AddMetaData(seurat.obj,
-              metadata = t(es.matrix),
-              col.name = rownames(es.matrix))
+    metadata = t(es.matrix),
+    col.name = rownames(es.matrix)
+  )
 seurat.obj$feature_data <-
-  GetAssayData(seurat.obj, assay = opt$assay,slot = "data")[opt$feature, ]
+  GetAssayData(seurat.obj, assay = opt$assay, slot = "data")[opt$feature, ]
 
 selected.group <- opt$group # 设定分组
 groups <- names(table(seurat.obj@meta.data[, selected.group]))
@@ -72,9 +73,10 @@ for (Group in groups) {
     # feature <- features[3]
     cor.test.res <-
       cor.test(meta.data[, "feature_data"],
-               meta.data[, feature],
-               method = "spearman",
-               exact = F)
+        meta.data[, feature],
+        method = "spearman",
+        exact = F
+      )
     p.value <- cor.test.res$p.value
     estimate <- cor.test.res$estimate
     tmp.res <- rbind(tmp.res, c(feature, p.value, estimate))
@@ -85,6 +87,7 @@ for (Group in groups) {
 }
 
 write.csv(res,
-          opt$output,
-          row.names = F,
-          quote = T)
+  opt$output,
+  row.names = F,
+  quote = T
+)

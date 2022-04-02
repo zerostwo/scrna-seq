@@ -3,30 +3,30 @@ library(optparse)
 
 #### Parameter configuration -----
 option_list <- list(
-    make_option(c("-i", "--input"),
-        type = "character", default = FALSE,
-        action = "store", help = "Seurat Object"
-    ),
-    make_option(c("-o", "--output"),
-        type = "character", default = FALSE,
-        action = "store", help = "Output Path"
-    ),
-    make_option(c("-g", "--group"),
-        type = "character", default = FALSE,
-        action = "store", help = "Group"
-    ),
-    make_option(c("-t", "--treatment"),
-        type = "character", default = FALSE,
-        action = "store", help = "Positive group"
-    ),
-    make_option(c("-a", "--assay"),
-        type = "character", default = FALSE,
-        action = "store", help = "Assay"
-    )
+  make_option(c("-i", "--input"),
+    type = "character", default = FALSE,
+    action = "store", help = "Seurat Object"
+  ),
+  make_option(c("-o", "--output"),
+    type = "character", default = FALSE,
+    action = "store", help = "Output Path"
+  ),
+  make_option(c("-g", "--group"),
+    type = "character", default = FALSE,
+    action = "store", help = "Group"
+  ),
+  make_option(c("-t", "--treatment"),
+    type = "character", default = FALSE,
+    action = "store", help = "Positive group"
+  ),
+  make_option(c("-a", "--assay"),
+    type = "character", default = FALSE,
+    action = "store", help = "Assay"
+  )
 )
 opt <- parse_args(OptionParser(
-    option_list = option_list,
-    usage = "This Script is a test for arguments!"
+  option_list = option_list,
+  usage = "This Script is a test for arguments!"
 ))
 print(opt)
 
@@ -38,15 +38,17 @@ print(table(seurat.obj$tmp.group))
 
 seurat.obj$celltype.group <-
   paste(seurat.obj$cell_type,
-        seurat.obj$tmp.group, sep = "_")
+    seurat.obj$tmp.group,
+    sep = "_"
+  )
 print(table(seurat.obj$celltype.group))
 
 cell.types <- names(table(seurat.obj$cell_type))
 groups <- names(table(seurat.obj$tmp.group))
-positive.group <- groups[which(groups==opt$treatment)]
-negative.group <- groups[which(groups!=opt$treatment)]
+positive.group <- groups[which(groups == opt$treatment)]
+negative.group <- groups[which(groups != opt$treatment)]
 
-#使用FindMarkers函数寻找差异表达基因
+# 使用FindMarkers函数寻找差异表达基因
 DefaultAssay(seurat.obj) <- opt$assay
 Idents(seurat.obj) <- "celltype.group"
 deg <- data.frame()
@@ -63,6 +65,7 @@ for (cell.type in cell.types) {
   deg <- rbind(deg, markers)
 }
 write.csv(deg,
-          file = opt$output,
-          quote = F,
-          row.names = F)
+  file = opt$output,
+  quote = F,
+  row.names = F
+)

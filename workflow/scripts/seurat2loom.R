@@ -9,6 +9,7 @@
 
 #### Load package ----
 library(Seurat)
+library(SeuratDisk)
 
 #### Parameter configuration -----
 library(optparse)
@@ -20,10 +21,6 @@ option_list <- list(
   make_option(c("-o", "--output"),
     type = "character", default = FALSE,
     action = "store", help = "Output Path"
-  ),
-  make_option(c("-a", "--assay"),
-    type = "character", default = FALSE,
-    action = "store", help = "Assay"
   )
 )
 opt <- parse_args(OptionParser(
@@ -34,14 +31,6 @@ print(opt)
 
 #### Load data ----
 SEURAT_OBJ_PATH <- readRDS(opt$input)
-DefaultAssay(SEURAT_OBJ_PATH) <- opt$assay
-
+SEURAT_OBJ_PATH <- CreateSeuratObject(GetAssayData(SEURAT_OBJ_PATH, assay = "RNA", slot = "counts"))
 #### Data processing ----
-counts <- as.matrix(SEURAT_OBJ_PATH@assays[[opt$assay]]@counts)
-counts <- t(counts)
-#### Output data ----
-write.table(cbind(rownames(counts), counts),
-  file = opt$output,
-  sep = "\t", quote = F,
-  row.names = F
-)
+loom <- as.loom(SEURAT_OBJ_PATH, filename = opt$output)

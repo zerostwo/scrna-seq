@@ -1,18 +1,19 @@
 #### 必须填写的内容 ----
 # 从R语言里面保存的Seurat对象路径
-SEURAT_OBJ: "/home/duansq/projects/scrna-m6A/output/01_seurat/test_dc2.rds"
+INPUT: /home/duansq/datasets/2022_adult-brain-vasc_EthanWinkler/data/am-endothelial/final_merged_ec_cb.rds
 # 分组信息，保证分组字段在Seurat对象的meta.data存在，并且只包含两组
-GROUP: "IGF2BP2_group"
+GROUP: group
 # 设置分组里的试验组
-TREATMENT: "postive"
-
-#### 可以选择填写 ----
+TREATMENT: AVM
+# 设置Assay
+ASSAY: RNA
+#### 可以选择性更改 ---- 
 # 阈值
 P_VALUE: 0.05
 LOG2FC: 0.25
 # MSigDB path
-HALLMAKR_PATH: "/DATA/public/MSigDB/h.all.v7.4.symbols.gmt"
-C2_PATH: "/DATA/public/MSigDB/c2.all.v7.4.symbols.gmt"
-C5_PATH: "/DATA/public/MSigDB/c5.all.v7.4.symbols.gmt"
-C6_PATH: "/DATA/public/MSigDB/c5.all.v7.4.symbols.gmt"
-C7_PATH: "/DATA/public/MSigDB/c5.all.v7.4.symbols.gmt"
+HALLMAKR_PATH: /DATA/public/MSigDB/h.all.v7.4.symbols.gmt
+C2_PATH: /DATA/public/MSigDB/c2.all.v7.4.symbols.gmt
+C5_PATH: /DATA/public/MSigDB/c5.all.v7.4.symbols.gmt
+C6_PATH: /DATA/public/MSigDB/c6.all.v7.4.symbols.gmt
+C7_PATH: /DATA/public/MSigDB/c7.all.v7.4.symbols.gmt

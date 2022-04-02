@@ -44,7 +44,7 @@ rule all:
         # expand("results/{sample}/cor/{GROUP}.kegg.cor.csv", sample=SAMPLES, GROUP=GROUP),
         # expand("results/{sample}/cor/{GROUP}.gobp.cor.csv", sample=SAMPLES, GROUP=GROUP),
         # 3. 转录调控网络分析
-        expand("results/{sample}/scenic/{GROUP}/expr_mat.tsv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/scenic/{GROUP}/expr_mat.loom", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/scenic/{GROUP}/expr_mat.adjacencies.tsv", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/scenic/{GROUP}/regulons.csv", sample=SAMPLES, GROUP=GROUP),
         expand("results/{sample}/scenic/{GROUP}/auc_mtx.csv", sample=SAMPLES, GROUP=GROUP)

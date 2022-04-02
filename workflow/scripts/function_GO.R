@@ -43,8 +43,10 @@ option_list <- list(
     help = "log2FC cutoff"
   )
 )
-opt <- parse_args(OptionParser(option_list = option_list,
-                               usage = "This Script is a test for arguments!"))
+opt <- parse_args(OptionParser(
+  option_list = option_list,
+  usage = "This Script is a test for arguments!"
+))
 print(opt)
 
 #### 导入数据 ----
@@ -61,15 +63,17 @@ for (cell.type in cell.types) {
   # cell.type <- cell.types[1]
   # 上调基因GO
   upregulated.top.genes <- deg %>%
-    filter(cell_type == cell.type,
-           avg_log2FC >= opt$log2fc)
-  
+    filter(
+      cell_type == cell.type,
+      avg_log2FC >= opt$log2fc
+    )
+
   bp <-
     enrichGO(
       upregulated.top.genes$gene,
       OrgDb = org.Hs.eg.db,
       # 如果是鼠要对应进行更换
-      keyType = 'SYMBOL',
+      keyType = "SYMBOL",
       ont = "BP",
       pAdjustMethod = "BH",
       pvalueCutoff = 0.05,
@@ -78,21 +82,25 @@ for (cell.type in cell.types) {
   upregulated.tmp.term <- bp@result
   upregulated.tmp.term$celltype <- cell.type
   upregulated.tmp.term$regulated <- "upregulated"
-  
-  term <- rbind(term,
-                upregulated.tmp.term)
-  
+
+  term <- rbind(
+    term,
+    upregulated.tmp.term
+  )
+
   # 下调基因GO
   downregulated.top.genes <- deg %>%
-    filter(cell_type == cell.type,
-           avg_log2FC <= -opt$log2fc)
-  
+    filter(
+      cell_type == cell.type,
+      avg_log2FC <= -opt$log2fc
+    )
+
   bp <-
     enrichGO(
       downregulated.top.genes$gene,
       OrgDb = org.Hs.eg.db,
       # 如果是鼠要对应进行更换
-      keyType = 'SYMBOL',
+      keyType = "SYMBOL",
       ont = "BP",
       pAdjustMethod = "BH",
       pvalueCutoff = 0.05,
@@ -101,12 +109,15 @@ for (cell.type in cell.types) {
   downregulated.tmp.term <- bp@result
   downregulated.tmp.term$celltype <- cell.type
   downregulated.tmp.term$regulated <- "downregulated"
-  
-  term <- rbind(term,
-                downregulated.tmp.term)
+
+  term <- rbind(
+    term,
+    downregulated.tmp.term
+  )
 }
 
 write.csv(term,
-          file = opt$output,
-          row.names = F,
-          quote = T)
+  file = opt$output,
+  row.names = F,
+  quote = T
+)
