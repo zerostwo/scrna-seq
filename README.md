@@ -28,7 +28,7 @@ Configure the workflow according to your needs via editing the file `config.yaml
 ```yaml
 #### Required ----
 # Absolute path to Seurat object (RDS format)
-SEURAT_OBJ_PATH: "/home/duansq/projects/scrna-m6A/output/01_seurat/test_dc2.rds"
+SEURAT_OBJ_PATH: "/home/duansq/projects/scrna-m6A/output/01_seurat/test_data.rds"
 # Grouping information, ensure that the grouping field exists in the meta.data of the Seurat object, and only contains two groups
 GROUP: "IGF2BP2_group"
 # Set the treatment group in the grouping field

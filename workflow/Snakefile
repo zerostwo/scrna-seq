@@ -11,6 +11,9 @@ C2_PATH = config["C2_PATH"]
 C5_PATH = config["C5_PATH"]
 C6_PATH = config["C6_PATH"]
 C7_PATH = config["C7_PATH"]
+PYSCENIC_PATH = config["PYSCENIC_PATH"]
+ANNOTATIONS_FILE_PATH = config["ANNOTATIONS_FILE_PATH"]
+DATABASE_FILE_PATH = config["DATABASE_FILE_PATH"]
 
 # 获取根名字
 import os

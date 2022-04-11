@@ -26,7 +26,7 @@ rule grn:
     threads: workflow.cores / 2
     shell:
         """
-        /opt/anaconda3/envs/pyscenic/bin/pyscenic grn \
+        {PYSCENIC_PATH} grn \
             --num_workers {threads} \
             --seed 717 \
             -o {output} \
@@ -47,11 +47,10 @@ rule ctx:
     threads: workflow.cores / 2
     shell:
         """
-        /opt/anaconda3/envs/pyscenic/bin/pyscenic ctx \
+        {PYSCENIC_PATH} ctx \
             {input[0]} \
-            /DATA/public/cisTarget_databases/human/hg38__refseq-r80__10kb_up_and_down_tss.mc9nr.feather \
-            /DATA/public/cisTarget_databases/human/hg38__refseq-r80__500bp_up_and_100bp_down_tss.mc9nr.feather \
-            --annotations_fname /DATA/public/cisTarget_databases/human/motifs-v9-nr.hgnc-m0.001-o0.0.tbl \
+            {DATABASE_FILE_PATH} \
+            --annotations_fname {ANNOTATIONS_FILE_PATH} \
             --expression_mtx_fname {input[1]} \
             --mode "dask_multiprocessing" \
             --output {output} \
@@ -71,7 +70,7 @@ rule aucell:
     threads: workflow.cores / 2
     shell:
         """
-        /opt/anaconda3/envs/pyscenic/bin/pyscenic aucell \
+        {PYSCENIC_PATH} aucell \
             {input[0]} \
             {input[1]} \
             -o {output} \

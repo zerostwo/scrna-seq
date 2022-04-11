@@ -1,12 +1,21 @@
 #### 必须填写的内容 ----
 # 从R语言里面保存的Seurat对象路径
-INPUT: /home/duansq/datasets/2022_adult-brain-vasc_EthanWinkler/data/am-endothelial/final_merged_ec_cb.rds
+INPUT: /home/duansq/pipeline/scrna-seq/resources/test_data.rds
 # 分组信息，保证分组字段在Seurat对象的meta.data存在，并且只包含两组
-GROUP: group
+GROUP: METTL3_group
 # 设置分组里的试验组
-TREATMENT: AVM
+TREATMENT: positive
 # 设置Assay
 ASSAY: RNA
+#### 软件设置 ----
+# pyscenic路径
+PYSCENIC_PATH: /opt/pySCENIC/0.11.2/bin/pyscenic
+# pyscenic注释文件
+ANNOTATIONS_FILE_PATH: /DATA/public/cisTarget_databases/human/motifs-v9-nr.hgnc-m0.001-o0.0.tbl 
+# 基因组排序文件
+DATABASE_FILE_PATH: 
+  /DATA/public/cisTarget_databases/human/hg38__refseq-r80__10kb_up_and_down_tss.mc9nr.feather
+  /DATA/public/cisTarget_databases/human/hg38__refseq-r80__500bp_up_and_100bp_down_tss.mc9nr.feather
 #### 可以选择性更改 ---- 
 # 阈值
 P_VALUE: 0.05
