@@ -28,11 +28,15 @@ Configure the workflow according to your needs via editing the file `config.yaml
 ```yaml
 #### Required ----
 # Absolute path to Seurat object (RDS format)
-SEURAT_OBJ_PATH: "/home/duansq/projects/scrna-m6A/output/01_seurat/test_data.rds"
+INPUT: /home/duansq/pipeline/scrna-seq/resources/test_data.rds
 # Grouping information, ensure that the grouping field exists in the meta.data of the Seurat object, and only contains two groups
-GROUP: "IGF2BP2_group"
+GROUP: METTL3_group
 # Set the treatment group in the grouping field
-TREATMENT: "postive"
+TREATMENT: positive
+# Set Assay
+ASSAY: RNA
+# Set species
+SPECIES: Homo sapiens
 
 #### Optional ----
 # ...

@@ -40,7 +40,7 @@ rule GSEA_HALLMARK:
     threads: workflow.cores / 5
     shell:
         """
-        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c H > {log} 2>&1
+        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c H -s "{SPECIES}" > {log} 2>&1
         """
 rule GSEA_C2:
     input:
@@ -54,7 +54,7 @@ rule GSEA_C2:
     threads: workflow.cores / 5
     shell:
         """
-        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C2 > {log} 2>&1
+        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C2 -s "{SPECIES}" > {log} 2>&1
         """
 rule GSEA_C5:
     input:
@@ -68,7 +68,7 @@ rule GSEA_C5:
     threads: workflow.cores / 5
     shell:
         """
-        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C5 > {log} 2>&1
+        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C5 -s "{SPECIES}" > {log} 2>&1
         """
 rule GSEA_C6:
     input:
@@ -82,7 +82,7 @@ rule GSEA_C6:
     threads: workflow.cores / 5
     shell:
         """
-        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C6 > {log} 2>&1
+        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C6 -s "{SPECIES}" > {log} 2>&1
         """
 rule GSEA_C7:
     input:
@@ -96,5 +96,5 @@ rule GSEA_C7:
     threads: workflow.cores / 5
     shell:
         """
-        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C7 > {log} 2>&1
+        Rscript workflow/scripts/function_GSEA.R -i {input} -o {output} -c C7 -s "{SPECIES}" > {log} 2>&1
         """

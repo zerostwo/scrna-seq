@@ -11,7 +11,7 @@ rule GSVA_HALLMARK:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -m {HALLMAKR_PATH} -a {ASSAY} > {log} 2>&1
+        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c H -a {ASSAY} -s "{SPECIES}" > {log} 2>&1
         """
 rule GSVA_C2:
     input:
@@ -25,7 +25,7 @@ rule GSVA_C2:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -m {C2_PATH} -a {ASSAY} > {log} 2>&1
+        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C2 -a {ASSAY} -s "{SPECIES}" > {log} 2>&1
         """
 
 rule GSVA_C5:
@@ -40,7 +40,7 @@ rule GSVA_C5:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -m {C5_PATH} -a {ASSAY} > {log} 2>&1
+        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C5 -a {ASSAY} -s "{SPECIES}" > {log} 2>&1
         """
 rule GSVA_C6:
     input:
@@ -54,7 +54,7 @@ rule GSVA_C6:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -m {C6_PATH} -a {ASSAY} > {log} 2>&1
+        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C6 -a {ASSAY} -s "{SPECIES}" > {log} 2>&1
         """
 
 rule GSVA_C7:
@@ -69,5 +69,5 @@ rule GSVA_C7:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -m {C7_PATH} -a {ASSAY} > {log} 2>&1
+        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C7 -a {ASSAY} -s "{SPECIES}" > {log} 2>&1
         """

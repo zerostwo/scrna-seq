@@ -58,7 +58,8 @@ for (cell.type in cell.types) {
     ident.1 = paste0(cell.type, "_", positive.group),
     ident.2 = paste0(cell.type, "_", negative.group),
     min.pct = 0,
-    logfc.threshold = 0
+    logfc.threshold = 0,
+    test.use = "wilcox"
   )
   markers$cell_type <- cell.type
   markers$gene <- rownames(markers)

@@ -22,11 +22,11 @@ option_list <- list(
     help = "Output file"
   ),
   make_option(
-    c("-m", "--msigdb"),
+    c("-c", "--category"),
     type = "character",
-    default = NULL,
+    default = FALSE,
     action = "store",
-    help = "MSigDB gmt file path"
+    help = "MSigDB"
   ),
   make_option(
     c("-a", "--assay"),
@@ -34,6 +34,13 @@ option_list <- list(
     default = FALSE,
     action = "store",
     help = "Assay"
+  ),
+    make_option(
+    c("-s", "--species"),
+    type = "character",
+    default = FALSE,
+    action = "store",
+    help = "Species, you can set Homo sapiens or Mus musculus"
   )
 )
 
@@ -44,7 +51,13 @@ opt <- parse_args(OptionParser(
 print(opt)
 #### 导入数据 ----
 # 读取基因集数据库
-s_sets <- getGmt(opt$msigdb)
+# s_sets <- getGmt(opt$msigdb)
+genesets <- msigdbr::msigdbr(
+    species = opt$species,
+    category = opt$category
+) %>%
+    dplyr::select(gs_name, gene_symbol)
+s_sets <- split(genesets$gene_symbol, genesets$gs_name)
 
 seurat_obj <-
   readRDS(opt$input) # 修改输入路径

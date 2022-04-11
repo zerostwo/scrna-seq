@@ -43,6 +43,8 @@ GROUP: METTL3_group
 TREATMENT: positive
 # 设置Assay
 ASSAY: RNA
+# 设置物种（可选：Homo sapiens或者Mus musculus）
+SPECIES: Homo sapiens
 #### 软件设置 ----
 # pyscenic路径
 PYSCENIC_PATH: /opt/pySCENIC/0.11.2/bin/pyscenic
@@ -56,12 +58,6 @@ DATABASE_FILE_PATH:
 # 阈值
 P_VALUE: 0.05
 LOG2FC: 0.25
-# MSigDB path
-HALLMAKR_PATH: /DATA/public/MSigDB/h.all.v7.4.symbols.gmt
-C2_PATH: /DATA/public/MSigDB/c2.all.v7.4.symbols.gmt
-C5_PATH: /DATA/public/MSigDB/c5.all.v7.4.symbols.gmt
-C6_PATH: /DATA/public/MSigDB/c6.all.v7.4.symbols.gmt
-C7_PATH: /DATA/public/MSigDB/c7.all.v7.4.symbols.gmt
 ```
 
 运行snakemake程序

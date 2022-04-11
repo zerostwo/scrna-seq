@@ -34,6 +34,13 @@ option_list <- list(
     default = FALSE,
     action = "store",
     help = "MSigDB"
+  ),
+    make_option(
+    c("-s", "--species"),
+    type = "character",
+    default = FALSE,
+    action = "store",
+    help = "Species, you can set Homo sapiens or Mus musculus"
   )
 )
 opt <- parse_args(OptionParser(
@@ -56,12 +63,10 @@ cell.types <- names(table(deg$cell_type))
 # C7: immunologic signature gene sets  represent cell states and perturbations within the immune system.
 category <- opt$category
 genesets <- msigdbr::msigdbr(
-  species = "Homo sapiens",
+  species = opt$species,
   category = category
-)
-genesets <- subset(genesets,
-  select = c("gs_name", "gene_symbol")
-)
+) %>%
+  dplyr::select(gs_name, gene_symbol)
 
 res <- list()
 for (cell.type in cell.types) {
@@ -75,33 +80,39 @@ for (cell.type in cell.types) {
     filtered.deg[order(filtered.deg$avg_log2FC, decreasing = T), ]
   genelist <-
     structure(filtered.deg$avg_log2FC, names = rownames(filtered.deg))
-  result <- tryCatch(
-    {
-      tmp.res <- clusterProfiler::GSEA(
-        genelist,
-        TERM2GENE = genesets,
-        eps = 0,
-        pvalueCutoff = 1,
-        seed = 717
-      )
-    },
-    warning = function(w) {
-      "W"
-    },
-    error = function(e) {
-      "E"
-    }
+  tmp.res <- clusterProfiler::GSEA(
+    genelist,
+    TERM2GENE = genesets,
+    # eps = 0,
+    # pvalueCutoff = 1,
+    seed = 717
   )
-  result
-  if (result != "E") {
-    tmp.res <- clusterProfiler::GSEA(
-      genelist,
-      TERM2GENE = genesets,
-      eps = 0,
-      pvalueCutoff = 1,
-      seed = 717
-    )
-    res[[cell.type]] <- tmp.res
-  }
+  # result <- tryCatch(
+  #   {
+  #     tmp.res <- clusterProfiler::GSEA(
+  #       genelist,
+  #       TERM2GENE = genesets,
+  #       # eps = 0,
+  #       # pvalueCutoff = 1,
+  #       seed = 717
+  #     )
+  #   },
+  #   warning = function(w) {
+  #     "W"
+  #   },
+  #   error = function(e) {
+  #     "E"
+  #   }
+  # )
+  # result
+  # if (result != "E") {
+  #   tmp.res <- clusterProfiler::GSEA(
+  #     genelist,
+  #     TERM2GENE = genesets,
+  #     eps = 0,
+  #     pvalueCutoff = 1,
+  #     seed = 717
+  #   )
+  res[[cell.type]] <- tmp.res
 }
 saveRDS(res, opt$output)
