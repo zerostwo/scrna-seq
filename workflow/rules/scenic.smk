@@ -76,3 +76,30 @@ rule aucell:
             -o {output} \
             --num_workers {threads} > {log} 2>&1
         """
+
+rule AUCELL_DIFF:
+    input:
+        "results/{sample}/scenic/{GROUP}/auc_mtx.csv"
+    output:
+        "results/{sample}/scenic/{GROUP}/auc_mtx_diff.csv"
+    log:
+        "results/{sample}/logs/{GROUP}.aucell.diff.log"
+    benchmark:
+        "results/{sample}/benchmark/{GROUP}.aucell.diff.benchmark.txt"
+    shell:
+        """
+        Rscript workflow/scripts/det.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
+        """
+rule REGULONS2DF:
+    input:
+        "results/{sample}/scenic/{GROUP}/regulons.csv"
+    output:
+        "results/{sample}/scenic/{GROUP}/tfs_targets.csv"
+    log:
+        "results/{sample}/logs/{GROUP}.regulons2df.log"
+    benchmark:
+        "results/{sample}/benchmark/{GROUP}.regulons2df.benchmark.txt"
+    shell:
+        """
+        {PYTHON_PATH} workflow/scripts/regulons2df.py {input} {output} > {log} 2>&1
+        """

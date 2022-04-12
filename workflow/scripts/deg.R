@@ -22,6 +22,10 @@ option_list <- list(
   make_option(c("-a", "--assay"),
     type = "character", default = FALSE,
     action = "store", help = "Assay"
+  ),
+  make_option(c("-m", "--method"),
+    type = "character", default = FALSE,
+    action = "store", help = "Test method"
   )
 )
 opt <- parse_args(OptionParser(
@@ -59,7 +63,7 @@ for (cell.type in cell.types) {
     ident.2 = paste0(cell.type, "_", negative.group),
     min.pct = 0,
     logfc.threshold = 0,
-    test.use = "wilcox"
+    test.use = opt$method
   )
   markers$cell_type <- cell.type
   markers$gene <- rownames(markers)

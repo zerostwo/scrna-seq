@@ -71,3 +71,69 @@ rule GSVA_C7:
         """
         Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C7 -a {ASSAY} -s "{SPECIES}" > {log} 2>&1
         """
+# 差异分析
+rule GSVA_HALLMARK_DIFF:
+    input:
+        "results/{sample}/function/GSVA/{GROUP}.hallmark.gsva.rds"
+    output:
+        "results/{sample}/function/GSVA/{GROUP}.hallmark.diff.gsva.csv"
+    log:
+        "results/{sample}/logs/{GROUP}.hallmark.diff.gsva.log"
+    benchmark:
+        "results/{sample}/benchmark/{GROUP}.hallmark.diff.gsva.benchmark.txt"
+    shell:
+        """
+        Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
+        """
+rule GSVA_C2_DIFF:
+    input:
+        "results/{sample}/function/GSVA/{GROUP}.c2.gsva.rds"
+    output:
+        "results/{sample}/function/GSVA/{GROUP}.c2.diff.gsva.csv"
+    log:
+        "results/{sample}/logs/{GROUP}.c2.diff.gsva.log"
+    benchmark:
+        "results/{sample}/benchmark/{GROUP}.c2.diff.gsva.benchmark.txt"
+    shell:
+        """
+        Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
+        """
+rule GSVA_C5_DIFF:
+    input:
+        "results/{sample}/function/GSVA/{GROUP}.c5.gsva.rds"
+    output:
+        "results/{sample}/function/GSVA/{GROUP}.c5.diff.gsva.csv"
+    log:
+        "results/{sample}/logs/{GROUP}.c5.diff.gsva.log"
+    benchmark:
+        "results/{sample}/benchmark/{GROUP}.c5.diff.gsva.benchmark.txt"
+    shell:
+        """
+        Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
+        """
+rule GSVA_C6_DIFF:
+    input:
+        "results/{sample}/function/GSVA/{GROUP}.c6.gsva.rds"
+    output:
+        "results/{sample}/function/GSVA/{GROUP}.c6.diff.gsva.csv"
+    log:
+        "results/{sample}/logs/{GROUP}.c6.diff.gsva.log"
+    benchmark:
+        "results/{sample}/benchmark/{GROUP}.c6.diff.gsva.benchmark.txt"
+    shell:
+        """
+        Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
+        """
+rule GSVA_C7_DIFF:
+    input:
+        "results/{sample}/function/GSVA/{GROUP}.c7.gsva.rds"
+    output:
+        "results/{sample}/function/GSVA/{GROUP}.c7.diff.gsva.csv"
+    log:
+        "results/{sample}/logs/{GROUP}.c7.diff.gsva.log"
+    benchmark:
+        "results/{sample}/benchmark/{GROUP}.c7.diff.gsva.benchmark.txt"
+    shell:
+        """
+        Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
+        """

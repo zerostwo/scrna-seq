@@ -3,7 +3,7 @@
 [![Snakemake][snakemake-badge]](snakemake-url)
 [中文说明][zh-readme-url]
 
-[snakemake-badge]: https://img.shields.io/badge/snakemake-≥6.13.2-brightgreen.svg
+[snakemake-badge]: https://img.shields.io/badge/snakemake-≥6.12.3-brightgreen.svg
 [snakemake-url]: https://snakemake.github.io
 [zh-readme-url]: README-zh.md
 

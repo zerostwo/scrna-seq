@@ -1,12 +1,12 @@
 rule GO:
     input:
-        "results/{sample}/deg/{GROUP}.deg.csv"
+        "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/GO/{GROUP}.go.csv"
+        "results/{sample}/function/GO/{GROUP}.{TEST_METHOD}.go.csv"
     log:
-        "results/{sample}/logs/{GROUP}.go.log"
+        "results/{sample}/logs/{GROUP}.{TEST_METHOD}.go.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.go.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.{TEST_METHOD}.go.benchmark.txt"
     threads: workflow.cores / 2
     shell:
         """
@@ -15,13 +15,13 @@ rule GO:
 
 rule KEGG:
     input:
-        "results/{sample}/deg/{GROUP}.deg.csv"
+        "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/KEGG/{GROUP}.kegg.csv"
+        "results/{sample}/function/KEGG/{GROUP}.{TEST_METHOD}.kegg.csv"
     log:
-        "results/{sample}/logs/{GROUP}.kegg.log"
+        "results/{sample}/logs/{GROUP}.{TEST_METHOD}.kegg.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.kegg.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.{TEST_METHOD}.kegg.benchmark.txt"
     threads: workflow.cores / 2
     shell:
         """
@@ -30,13 +30,13 @@ rule KEGG:
 
 rule GSEA_HALLMARK:
     input:
-        "results/{sample}/deg/{GROUP}.deg.csv"
+        "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/GSEA/{GROUP}.hallmark.gsea.rds"
+        "results/{sample}/function/GSEA/{GROUP}.hallmark.{TEST_METHOD}.gsea.rds"
     log:
-        "results/{sample}/logs/{GROUP}.hallmark.gsea.log"
+        "results/{sample}/logs/{GROUP}.hallmark.{TEST_METHOD}.gsea.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.hallmark.gsea.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.hallmark.{TEST_METHOD}.gsea.benchmark.txt"
     threads: workflow.cores / 5
     shell:
         """
@@ -44,13 +44,13 @@ rule GSEA_HALLMARK:
         """
 rule GSEA_C2:
     input:
-        "results/{sample}/deg/{GROUP}.deg.csv"
+        "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/GSEA/{GROUP}.c2.gsea.rds"
+        "results/{sample}/function/GSEA/{GROUP}.c2.{TEST_METHOD}.gsea.rds"
     log:
-        "results/{sample}/logs/{GROUP}.c2.gsea.log"
+        "results/{sample}/logs/{GROUP}.c2.{TEST_METHOD}.gsea.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.c2.gsea.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.c2.{TEST_METHOD}.gsea.benchmark.txt"
     threads: workflow.cores / 5
     shell:
         """
@@ -58,13 +58,13 @@ rule GSEA_C2:
         """
 rule GSEA_C5:
     input:
-        "results/{sample}/deg/{GROUP}.deg.csv"
+        "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/GSEA/{GROUP}.c5.gsea.rds"
+        "results/{sample}/function/GSEA/{GROUP}.c5.{TEST_METHOD}.gsea.rds"
     log:
-        "results/{sample}/logs/{GROUP}.c5.gsea.log"
+        "results/{sample}/logs/{GROUP}.c5.{TEST_METHOD}.gsea.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.c5.gsea.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.c5.{TEST_METHOD}.gsea.benchmark.txt"
     threads: workflow.cores / 5
     shell:
         """
@@ -72,13 +72,13 @@ rule GSEA_C5:
         """
 rule GSEA_C6:
     input:
-        "results/{sample}/deg/{GROUP}.deg.csv"
+        "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/GSEA/{GROUP}.c6.gsea.rds"
+        "results/{sample}/function/GSEA/{GROUP}.c6.{TEST_METHOD}.gsea.rds"
     log:
-        "results/{sample}/logs/{GROUP}.c6.gsea.log"
+        "results/{sample}/logs/{GROUP}.c6.{TEST_METHOD}.gsea.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.c6.gsea.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.c6.{TEST_METHOD}.gsea.benchmark.txt"
     threads: workflow.cores / 5
     shell:
         """
@@ -86,13 +86,13 @@ rule GSEA_C6:
         """
 rule GSEA_C7:
     input:
-        "results/{sample}/deg/{GROUP}.deg.csv"
+        "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/GSEA/{GROUP}.c7.gsea.rds"
+        "results/{sample}/function/GSEA/{GROUP}.c7.{TEST_METHOD}.gsea.rds"
     log:
-        "results/{sample}/logs/{GROUP}.c7.gsea.log"
+        "results/{sample}/logs/{GROUP}.c7.{TEST_METHOD}.gsea.log"
     benchmark:
-        "results/{sample}/benchmark/{GROUP}.c7.gsea.benchmark.txt"
+        "results/{sample}/benchmark/{GROUP}.c7.{TEST_METHOD}.gsea.benchmark.txt"
     threads: workflow.cores / 5
     shell:
         """

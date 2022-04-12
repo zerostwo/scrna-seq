@@ -1,8 +1,8 @@
 #### 必须填写的内容 ----
 # 从R语言里面保存的Seurat对象路径
-INPUT: /home/duansq/projects/20220412-nCoV-Pancancer/data/pdac_dc2.rds
+INPUT: /home/duansq/pipeline/scrna-seq/resources/test_data.rds
 # 分组信息，保证分组字段在Seurat对象的meta.data存在，并且只包含两组
-GROUP: feature_group
+GROUP: METTL3_group
 # 设置分组里的试验组
 TREATMENT: positive
 # 差异检测方法（可选：MAST，bimod，wilcox，LR，t）

@@ -15,7 +15,7 @@
 ### 配置程序
 ```bash
 cd ~/
-git clone https://github.com.cnpmjs.org/zerostwo/scrna-seq.git
+git clone https://github.com/zerostwo/scrna-seq.git
 mkdir ~/scrna-seq/resources
 ```
 ### R语言部分
