@@ -31,7 +31,7 @@ rule grn:
             --seed 717 \
             -o {output} \
             {input} \
-            /DATA/public/cisTarget_databases/resources/hs_hgnc_tfs.txt > {log} 2>&1
+            {TF_LIST} > {log} 2>&1
         """
 ## 3. ctx
 rule ctx:

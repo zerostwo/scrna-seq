@@ -15,6 +15,7 @@ ANNOTATIONS_FILE_PATH = config["ANNOTATIONS_FILE_PATH"]
 DATABASE_FILE_PATH = config["DATABASE_FILE_PATH"]
 SPECIES = config["SPECIES"]
 TEST_METHOD = config["TEST_METHOD"]
+TF_LIST = config["TF_LIST"]
 # 获取根名字
 import os
 SAMPLES = os.path.basename(SEURAT_OBJ_PATH).split('.')[0]
