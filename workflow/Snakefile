@@ -21,20 +21,18 @@ SAMPLES = os.path.basename(SEURAT_OBJ_PATH).split('.')[0]
 
 rule all:
     input: 
-        # 1. 相关性分析（选择感兴趣的基因）
-        ## 基因与基因之间的表达相关性
-        ## 基因与功能术语的GSVA得分相关性
-        expand("results/{sample}/function/GSVA/{GROUP}.hallmark.gsva.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.hallmark.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c2.gsva.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c2.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c5.gsva.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c5.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c6.gsva.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c6.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c7.gsva.rds", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/function/GSVA/{GROUP}.c7.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        ## 基因与细胞比例的相关性
+        # 1. 打分
+        ## GSVA打分及差异分析
+        expand("results/{sample}/score/GSVA/hallmark.gsva.rds", sample=SAMPLES),
+        expand("results/{sample}/score/GSVA/{GROUP}.hallmark.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/score/GSVA/c2.gsva.rds", sample=SAMPLES),
+        expand("results/{sample}/score/GSVA/{GROUP}.c2.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/score/GSVA/c5.gsva.rds", sample=SAMPLES),
+        expand("results/{sample}/score/GSVA/{GROUP}.c5.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/score/GSVA/c6.gsva.rds", sample=SAMPLES),
+        expand("results/{sample}/score/GSVA/{GROUP}.c6.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/score/GSVA/c7.gsva.rds", sample=SAMPLES),
+        expand("results/{sample}/score/GSVA/{GROUP}.c7.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
         # 2. 差异分析（按照感兴趣的基因表达与否定义为阳性阴性两组）
         ## 差异表达基因分析
         expand("results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv", sample=SAMPLES, GROUP=GROUP, TEST_METHOD=TEST_METHOD),
@@ -48,24 +46,20 @@ rule all:
         expand("results/{sample}/function/GSEA/{GROUP}.c6.{TEST_METHOD}.gsea.rds", sample=SAMPLES, GROUP=GROUP, TEST_METHOD=TEST_METHOD),
         expand("results/{sample}/function/GSEA/{GROUP}.c7.{TEST_METHOD}.gsea.rds", sample=SAMPLES, GROUP=GROUP, TEST_METHOD=TEST_METHOD),
         # 3. 转录调控网络分析
-        expand("results/{sample}/scenic/{GROUP}/expr_mat.loom", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/scenic/{GROUP}/expr_mat.adjacencies.tsv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/scenic/{GROUP}/regulons.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/scenic/{GROUP}/auc_mtx.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/scenic/{GROUP}/auc_mtx_diff.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/scenic/{GROUP}/tfs_targets.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/scenic/expr_mat.loom", sample=SAMPLES),
+        expand("results/{sample}/scenic/expr_mat.adjacencies.tsv", sample=SAMPLES),
+        expand("results/{sample}/scenic/regulons.csv", sample=SAMPLES),
+        expand("results/{sample}/scenic/auc_mtx.csv", sample=SAMPLES),
+        expand("results/{sample}/scenic/tfs_targets.csv", sample=SAMPLES),
+        expand("results/{sample}/scenic/{GROUP}.auc_mtx_diff.csv", sample=SAMPLES, GROUP=GROUP)
 
 # 1. 差异分析（按照感兴趣的基因表达与否定义为阳性阴性两组）
 ## 差异表达基因分析
 include: "rules/deg.smk"
 ## 差异表达基因功能富集分析和GSEA
 include: "rules/function.smk"
-
 # 2. 打分
 # gsva打分
 include: "rules/gsva.smk"
-# 打分完后看差异（12日做）
-
 # 3. 转录调控网络分析
 include: "rules/scenic.smk"
-# 转录因子看差异（12日做）
