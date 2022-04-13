@@ -7,10 +7,9 @@ rule GO:
         "results/{sample}/logs/{GROUP}.{TEST_METHOD}.go.log"
     benchmark:
         "results/{sample}/benchmark/{GROUP}.{TEST_METHOD}.go.benchmark.txt"
-    threads: workflow.cores / 2
     shell:
         """
-        Rscript workflow/scripts/function_GO.R -i {input} -o {output} -p 0.05 -f 0.25 > {log} 2>&1
+        Rscript workflow/scripts/function_GO.R -i {input} -o {output} -p 0.05 -f 0.25 -s "{SPECIES}" > {log} 2>&1
         """
 
 rule KEGG:
@@ -22,10 +21,9 @@ rule KEGG:
         "results/{sample}/logs/{GROUP}.{TEST_METHOD}.kegg.log"
     benchmark:
         "results/{sample}/benchmark/{GROUP}.{TEST_METHOD}.kegg.benchmark.txt"
-    threads: workflow.cores / 2
     shell:
         """
-        Rscript workflow/scripts/function_KEGG.R -i {input} -o {output} -p {P_VALUE} -f {LOG2FC} > {log} 2>&1
+        Rscript workflow/scripts/function_KEGG.R -i {input} -o {output} -p {P_VALUE} -f {LOG2FC} -s "{SPECIES}" > {log} 2>&1
         """
 
 rule GSEA_HALLMARK:

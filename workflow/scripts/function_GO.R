@@ -1,18 +1,15 @@
 #### Information ----
-# Title   :
-# File    :   function.R
+# Title   :   Enrich analysis of GO
+# File    :   function_GO.R
 # Author  :   Songqi Duan
 # Contact :   songqi.duan@outlook.com
 # License :   Copyright (C) 2014-2022 by Songqi Duan
 # Created :   2021/12/13 16:07:27
-# Updated :   2022
-
-#### 导入包 ----
-library(clusterProfiler)
-library(org.Hs.eg.db) # 鼠：org.Mm.eg.db；人：org.Hs.eg.db
+# Updated :   2022/04/13 17:31:11
+#### Load package ----
 library(tidyverse)
 library(optparse)
-
+#### Parameter configuration -----
 option_list <- list(
   make_option(
     c("-i", "--input"),
@@ -41,6 +38,13 @@ option_list <- list(
     default = FALSE,
     action = "store",
     help = "log2FC cutoff"
+  ),
+  make_option(
+    c("-s", "--species"),
+    type = "character",
+    default = FALSE,
+    action = "store",
+    help = "Species, you can set Homo sapiens or Mus musculus"
   )
 )
 opt <- parse_args(OptionParser(
@@ -48,76 +52,85 @@ opt <- parse_args(OptionParser(
   usage = "This Script is a test for arguments!"
 ))
 print(opt)
-
-#### 导入数据 ----
+#### Load data ----
 deg <-
   read_csv(opt$input)
 print(head(deg))
 deg <- deg %>%
   filter(p_val <= opt$pvalue)
-
-#### GO分析 ----
 cell.types <- names(table(deg$cell_type))
-term <- data.frame()
-for (cell.type in cell.types) {
-  # cell.type <- cell.types[1]
-  # 上调基因GO
-  upregulated.top.genes <- deg %>%
-    filter(
-      cell_type == cell.type,
-      avg_log2FC >= opt$log2fc
-    )
-
-  bp <-
-    enrichGO(
-      upregulated.top.genes$gene,
-      OrgDb = org.Hs.eg.db,
-      # 如果是鼠要对应进行更换
-      keyType = "SYMBOL",
-      ont = "BP",
-      pAdjustMethod = "BH",
-      pvalueCutoff = 0.05,
-      qvalueCutoff = 0.2
-    )
-  upregulated.tmp.term <- bp@result
-  upregulated.tmp.term$celltype <- cell.type
-  upregulated.tmp.term$regulated <- "upregulated"
-
-  term <- rbind(
-    term,
-    upregulated.tmp.term
-  )
-
-  # 下调基因GO
-  downregulated.top.genes <- deg %>%
-    filter(
-      cell_type == cell.type,
-      avg_log2FC <= -opt$log2fc
-    )
-
-  bp <-
-    enrichGO(
-      downregulated.top.genes$gene,
-      OrgDb = org.Hs.eg.db,
-      # 如果是鼠要对应进行更换
-      keyType = "SYMBOL",
-      ont = "BP",
-      pAdjustMethod = "BH",
-      pvalueCutoff = 0.05,
-      qvalueCutoff = 0.2
-    )
-  downregulated.tmp.term <- bp@result
-  downregulated.tmp.term$celltype <- cell.type
-  downregulated.tmp.term$regulated <- "downregulated"
-
-  term <- rbind(
-    term,
-    downregulated.tmp.term
-  )
+#### Enrich GO ----
+enrich_go <- function(features, species) {
+  if (species %in% c("human", "Homo sapiens")) {
+    bp <-
+      clusterProfiler::enrichGO(
+        features,
+        OrgDb = org.Hs.eg.db::org.Hs.eg.db,
+        keyType = "SYMBOL",
+        ont = "BP",
+        pAdjustMethod = "BH",
+        pvalueCutoff = 0.05,
+        qvalueCutoff = 0.2
+      )
+  }
+  if (species %in% c("mouse", "Mus musculus")) {
+    bp <-
+      clusterProfiler::enrichGO(
+        features,
+        OrgDb = org.Mm.eg.db::org.Mm.eg.db,
+        keyType = "SYMBOL",
+        ont = "BP",
+        pAdjustMethod = "BH",
+        pvalueCutoff = 0.05,
+        qvalueCutoff = 0.2
+      )
+  }
+  return(bp)
 }
-
-write.csv(term,
-  file = opt$output,
-  row.names = F,
-  quote = T
+# Upregulated gene
+upregulated_res <- map(cell.types, function(x) {
+  print(x)
+  upregulated_gene <- deg %>%
+    filter(
+      cell_type == x,
+      avg_log2FC >= opt$log2fc
+    ) %>%
+    pull(gene)
+  print(upregulated_gene)
+  print(opt$species)
+  bp <- enrich_go(upregulated_gene, opt$species)
+})
+names(upregulated_res) <- cell.types
+upregulated_res_df <- map_df(cell.types, function(x) {
+  upregulated.tmp.term <- upregulated_res[[x]]@result
+  upregulated.tmp.term$cell_type <- x
+  upregulated.tmp.term$regulated <- "upregulated"
+  return(upregulated.tmp.term)
+})
+# Downregulated gene
+downregulated_res <- map(cell.types, function(x) {
+  print(x)
+  downregulated_gene <- deg %>%
+    filter(
+      cell_type == x,
+      avg_log2FC <= -opt$log2fc
+    ) %>%
+    pull(gene)
+  print(downregulated_gene)
+  print(opt$species)
+  bp <- enrich_go(downregulated_gene, opt$species)
+})
+names(downregulated_res) <- cell.types
+downregulated_res_df <- map_df(cell.types, function(x) {
+  downregulated.tmp.term <- downregulated_res[[x]]@result
+  downregulated.tmp.term$cell_type <- x
+  downregulated.tmp.term$regulated <- "downregulated"
+  return(downregulated.tmp.term)
+})
+res_df <- upregulated_res_df %>% bind_rows(downregulated_res_df)
+#### Save results ----
+write_csv(res_df,
+  file = opt$output
 )
+#### test ----
+# Rscript workflow/scripts/function_GO.R -i ./results/test_data/deg/METTL3_group.wilcox.deg.csv -o ./enrich_go.csv -p 0.05 -f 0.25 -s human
