@@ -8,10 +8,10 @@
 # Updated :   2021/05/25 23:07:17
 
 #### Load package ----
-library(Seurat)
+pacman::p_load(Seurat)
 
 #### Parameter configuration -----
-library(optparse)
+pacman::p_load(optparse)
 option_list <- list(
   make_option(c("-i", "--input"),
     type = "character", default = FALSE,

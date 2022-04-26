@@ -16,24 +16,46 @@ DATABASE_FILE_PATH = config["DATABASE_FILE_PATH"]
 SPECIES = config["SPECIES"]
 TEST_METHOD = config["TEST_METHOD"]
 TF_LIST = config["TF_LIST"]
+SCORE_METHOD = config["SCORE_METHOD"]
 # 获取根名字
 import os
+import re
+
+def read_csv(file_name):
+    f = open(file_name, "r")
+    c = f.read()
+    res = list()
+    rows = c.split("\n")
+    for row in rows:
+        res.append(row)
+    res.pop()
+    return(res)
+
 SAMPLES = os.path.basename(SEURAT_OBJ_PATH).split('.')[0]
 
+if not os.path.exists("results/" + SAMPLES):
+    os.makedirs("results/" + SAMPLES)
+if not os.path.exists("results/" + SAMPLES + "/cell_types.csv"):
+    ## 获取细胞类型
+    str = "Rscript workflow/scripts/get_cell_types.R -i " + SEURAT_OBJ_PATH + " -o " + "./results/" + SAMPLES + "/cell_types.csv"
+    os.system(str)
+
+cell_types = read_csv("results/" + SAMPLES + "/cell_types.csv")
+
 rule all:
-    input: 
+    input:
         # 1. 打分
         ## GSVA打分及差异分析
-        expand("results/{sample}/score/GSVA/hallmark.gsva.rds", sample=SAMPLES),
-        expand("results/{sample}/score/GSVA/{GROUP}.hallmark.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/score/GSVA/c2.gsva.rds", sample=SAMPLES),
-        expand("results/{sample}/score/GSVA/{GROUP}.c2.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/score/GSVA/c5.gsva.rds", sample=SAMPLES),
-        expand("results/{sample}/score/GSVA/{GROUP}.c5.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/score/GSVA/c6.gsva.rds", sample=SAMPLES),
-        expand("results/{sample}/score/GSVA/{GROUP}.c6.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
-        expand("results/{sample}/score/GSVA/c7.gsva.rds", sample=SAMPLES),
-        expand("results/{sample}/score/GSVA/{GROUP}.c7.diff.gsva.csv", sample=SAMPLES, GROUP=GROUP),
+        expand("results/{sample}/score/{SCORE_METHOD}/hallmark.{SCORE_METHOD}.rds", sample=SAMPLES, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/{GROUP}.hallmark.diff.{SCORE_METHOD}.csv", sample=SAMPLES, GROUP=GROUP, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/c2.{SCORE_METHOD}.rds", sample=SAMPLES, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/{GROUP}.c2.diff.{SCORE_METHOD}.csv", sample=SAMPLES, GROUP=GROUP, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/c5.{SCORE_METHOD}.rds", sample=SAMPLES, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/{GROUP}.c5.diff.{SCORE_METHOD}.csv", sample=SAMPLES, GROUP=GROUP, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/c6.{SCORE_METHOD}.rds", sample=SAMPLES, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/{GROUP}.c6.diff.{SCORE_METHOD}.csv", sample=SAMPLES, GROUP=GROUP, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/c7.{SCORE_METHOD}.rds", sample=SAMPLES, SCORE_METHOD=SCORE_METHOD),
+        expand("results/{sample}/score/{SCORE_METHOD}/{GROUP}.c7.diff.{SCORE_METHOD}.csv", sample=SAMPLES, GROUP=GROUP, SCORE_METHOD=SCORE_METHOD),
         # 2. 差异分析（按照感兴趣的基因表达与否定义为阳性阴性两组）
         ## 差异表达基因分析
         expand("results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv", sample=SAMPLES, GROUP=GROUP, TEST_METHOD=TEST_METHOD),
@@ -47,12 +69,12 @@ rule all:
         expand("results/{sample}/function/GSEA/{GROUP}.c6.{TEST_METHOD}.gsea.rds", sample=SAMPLES, GROUP=GROUP, TEST_METHOD=TEST_METHOD),
         expand("results/{sample}/function/GSEA/{GROUP}.c7.{TEST_METHOD}.gsea.rds", sample=SAMPLES, GROUP=GROUP, TEST_METHOD=TEST_METHOD),
         # 3. 转录调控网络分析
-        expand("results/{sample}/scenic/expr_mat.loom", sample=SAMPLES),
-        expand("results/{sample}/scenic/expr_mat.adjacencies.tsv", sample=SAMPLES),
-        expand("results/{sample}/scenic/regulons.csv", sample=SAMPLES),
-        expand("results/{sample}/scenic/auc_mtx.csv", sample=SAMPLES),
-        expand("results/{sample}/scenic/tfs_targets.csv", sample=SAMPLES),
-        expand("results/{sample}/scenic/{GROUP}.auc_mtx_diff.csv", sample=SAMPLES, GROUP=GROUP)
+        expand("results/{sample}/scenic/{cell_type}.expr_mat.loom", sample=SAMPLES, cell_type=cell_types),
+        expand("results/{sample}/scenic/{cell_type}.expr_mat.adjacencies.tsv", sample=SAMPLES, cell_type=cell_types),
+        expand("results/{sample}/scenic/{cell_type}.regulons.csv", sample=SAMPLES, cell_type=cell_types),
+        expand("results/{sample}/scenic/{cell_type}.auc_mtx.csv", sample=SAMPLES, cell_type=cell_types),
+        expand("results/{sample}/scenic/{cell_type}.tfs_targets.csv", sample=SAMPLES, cell_type=cell_types),
+        expand("results/{sample}/scenic/{cell_type}.{GROUP}.auc_mtx_diff.csv", sample=SAMPLES, GROUP=GROUP, cell_type=cell_types)
 
 # 1. 差异分析（按照感兴趣的基因表达与否定义为阳性阴性两组）
 ## 差异表达基因分析
@@ -60,7 +82,6 @@ include: "rules/deg.smk"
 ## 差异表达基因功能富集分析和GSEA
 include: "rules/function.smk"
 # 2. 打分
-# gsva打分
-include: "rules/gsva.smk"
+include: "rules/score.smk"
 # 3. 转录调控网络分析
 include: "rules/scenic.smk"

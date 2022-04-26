@@ -7,8 +7,8 @@
 # Created :   2021/12/13 16:07:27
 # Updated :   2022/04/13 17:31:11
 #### Load package ----
-library(tidyverse)
-library(optparse)
+pacman::p_load(tidyverse)
+pacman::p_load(optparse)
 #### Parameter configuration -----
 option_list <- list(
   make_option(

@@ -8,10 +8,10 @@
 # Updated :   2022/02/21 16:45:11
 
 #### 导入包 ----
-library(msigdbr)
-library(clusterProfiler)
-library(tidyverse)
-library(optparse)
+pacman::p_load(msigdbr)
+pacman::p_load(clusterProfiler)
+pacman::p_load(tidyverse)
+pacman::p_load(optparse)
 
 option_list <- list(
   make_option(

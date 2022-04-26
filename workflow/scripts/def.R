@@ -1,7 +1,7 @@
-library(Seurat)
-library(tidyverse)
-library(limma)
-library(optparse)
+pacman::p_load(Seurat)
+pacman::p_load(tidyverse)
+pacman::p_load(limma)
+pacman::p_load(optparse)
 #### Parameter configuration -----
 option_list <- list(
   make_option(c("-i", "--input"),

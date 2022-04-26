@@ -11,6 +11,8 @@ TEST_METHOD: wilcox
 ASSAY: RNA
 # Set your species (optional: Homo sapiens or Mus musculus)
 SPECIES: Homo sapiens
+# Score method (optional: GSVA, AddModuleScore, AUCell)
+SCORE_METHOD: AddModuleScore
 #### Software settings ----
 # pyscenic path
 PYSCENIC_PATH: /opt/pySCENIC/0.11.2/bin/pyscenic

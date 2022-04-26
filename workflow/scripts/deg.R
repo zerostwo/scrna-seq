@@ -1,5 +1,5 @@
-library(Seurat)
-library(optparse)
+pacman::p_load(Seurat)
+pacman::p_load(optparse)
 
 #### Parameter configuration -----
 option_list <- list(
