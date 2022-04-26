@@ -2,7 +2,7 @@ rule GO:
     input:
         "results/{sample}/deg/{GROUP}.{TEST_METHOD}.deg.csv"
     output:
-        "results/{sample}/function/GO/{GROUP}.{TEST_METHOD}.go.csv"
+        "results/{sample}/function/GO/{GROUP}.{TEST_METHOD}.go.csv",
     log:
         "results/{sample}/logs/{GROUP}.{TEST_METHOD}.go.log"
     benchmark:

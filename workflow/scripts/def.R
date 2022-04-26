@@ -39,17 +39,17 @@ es_matrix <-
     opt$expr
   )
 
-group <- opt$group
+s_group <- opt$group
 positive_group <- opt$treatment
 
-metadata <- metadata %>% rename(tmp_group = group)
+metadata <- metadata %>% rename(tmp_group = s_group)
 
 cell_types <- metadata %>%
   count(cell_type) %>%
   pull(cell_type)
 
-x <- cell_types[2]
 res <- map(cell_types, function(x) {
+  print(x)
   filtered_metadata <-
     metadata %>%
     filter(cell_type == x)
@@ -110,3 +110,5 @@ res <- map(cell_types, function(x) {
 })
 def <- map_df(res, as_tibble)
 write_csv(def, opt$output)
+
+# Rscript workflow/scripts/def.R -i  -e {input} -o {output} -g {GROUP} -t {TREATMENT}
