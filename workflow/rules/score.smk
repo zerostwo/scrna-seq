@@ -1,5 +1,5 @@
-# GSVA打分
-rule GSVA_HALLMARK:
+# Score
+rule SCORE_HALLMARK:
     input:
         SEURAT_OBJ_PATH
     output:
@@ -11,9 +11,9 @@ rule GSVA_HALLMARK:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c H -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
+        Rscript workflow/scripts/score.R -i {input} -o {output} -c H -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
         """
-rule GSVA_C2:
+rule SCORE_C2:
     input:
         SEURAT_OBJ_PATH
     output:
@@ -25,10 +25,10 @@ rule GSVA_C2:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C2 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
+        Rscript workflow/scripts/score.R -i {input} -o {output} -c C2 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
         """
 
-rule GSVA_C5:
+rule SCORE_C5:
     input:
         SEURAT_OBJ_PATH
     output:
@@ -40,9 +40,9 @@ rule GSVA_C5:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C5 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
+        Rscript workflow/scripts/score.R -i {input} -o {output} -c C5 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
         """
-rule GSVA_C6:
+rule SCORE_C6:
     input:
         SEURAT_OBJ_PATH
     output:
@@ -54,10 +54,10 @@ rule GSVA_C6:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C6 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
+        Rscript workflow/scripts/score.R -i {input} -o {output} -c C6 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
         """
 
-rule GSVA_C7:
+rule SCORE_C7:
     input:
         SEURAT_OBJ_PATH
     output:
@@ -69,10 +69,10 @@ rule GSVA_C7:
     threads: workflow.cores / 10
     shell:
         """
-        Rscript workflow/scripts/gsva.R -i {input} -o {output} -c C7 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
+        Rscript workflow/scripts/score.R -i {input} -o {output} -c C7 -a {ASSAY} -s "{SPECIES}" -m {SCORE_METHOD} > {log} 2>&1
         """
 # 差异分析
-rule GSVA_HALLMARK_DIFF:
+rule SCORE_HALLMARK_DIFF:
     input:
         "results/{sample}/score/{SCORE_METHOD}/hallmark.{SCORE_METHOD}.rds"
     output:
@@ -85,7 +85,7 @@ rule GSVA_HALLMARK_DIFF:
         """
         Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
         """
-rule GSVA_C2_DIFF:
+rule SCORE_C2_DIFF:
     input:
         "results/{sample}/score/{SCORE_METHOD}/c2.{SCORE_METHOD}.rds"
     output:
@@ -98,7 +98,7 @@ rule GSVA_C2_DIFF:
         """
         Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
         """
-rule GSVA_C5_DIFF:
+rule SCORE_C5_DIFF:
     input:
         "results/{sample}/score/{SCORE_METHOD}/c5.{SCORE_METHOD}.rds"
     output:
@@ -111,7 +111,7 @@ rule GSVA_C5_DIFF:
         """
         Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
         """
-rule GSVA_C6_DIFF:
+rule SCORE_C6_DIFF:
     input:
         "results/{sample}/score/{SCORE_METHOD}/c6.{SCORE_METHOD}.rds"
     output:
@@ -124,7 +124,7 @@ rule GSVA_C6_DIFF:
         """
         Rscript workflow/scripts/def.R -i {SEURAT_OBJ_PATH} -e {input} -o {output} -g {GROUP} -t {TREATMENT} > {log} 2>&1
         """
-rule GSVA_C7_DIFF:
+rule SCORE_C7_DIFF:
     input:
         "results/{sample}/score/{SCORE_METHOD}/c7.{SCORE_METHOD}.rds"
     output:
