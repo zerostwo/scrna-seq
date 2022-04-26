@@ -23,6 +23,10 @@ option_list <- list(
   make_option(c("-t", "--treatment"),
     type = "character", default = FALSE,
     action = "store", help = "Positive group"
+  ),
+  make_option(c("-c", "--celltype"),
+    type = "character", default = FALSE,
+    action = "store", help = "Cell type"
   )
 )
 opt <- parse_args(OptionParser(
@@ -33,6 +37,7 @@ print(opt)
 
 seurat_obj <-
   readRDS(opt$input)
+seurat_obj <- seurat_obj %>% subset(subset = cell_type == gsub("____", " ", opt$celltype))
 metadata <- seurat_obj@meta.data
 
 es_matrix <-
@@ -44,10 +49,10 @@ es_matrix <- es_matrix %>%
   pivot_wider(names_from = Cell, values_from = value) %>%
   column_to_rownames("name")
 
-group <- opt$group
+s_group <- opt$group
 positive_group <- opt$treatment
 
-metadata <- metadata %>% rename(tmp_group = group)
+metadata <- metadata %>% rename(tmp_group = s_group)
 
 cell_types <- metadata %>%
   count(cell_type) %>%

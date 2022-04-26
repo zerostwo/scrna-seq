@@ -10,11 +10,16 @@
 #### Load package ----
 library(Seurat)
 library(SeuratDisk)
+library(tidyverse)
 
 #### Parameter configuration -----
 library(optparse)
 option_list <- list(
   make_option(c("-i", "--input"),
+    type = "character", default = FALSE,
+    action = "store", help = "Seurat Object"
+  ),
+  make_option(c("-c", "--celltype"),
     type = "character", default = FALSE,
     action = "store", help = "Seurat Object"
   ),
@@ -30,7 +35,11 @@ opt <- parse_args(OptionParser(
 print(opt)
 
 #### Load data ----
-SEURAT_OBJ_PATH <- readRDS(opt$input)
-SEURAT_OBJ_PATH <- CreateSeuratObject(GetAssayData(SEURAT_OBJ_PATH, assay = "RNA", slot = "counts"))
+seurat_obj <- readRDS(opt$input)
+cell_types <- names(table(seurat_obj$cell_type))
+
 #### Data processing ----
-loom <- as.loom(SEURAT_OBJ_PATH, filename = opt$output)
+sub_seurat_obj <-
+  subset(seurat_obj, subset = cell_type == gsub("____", " ", opt$celltype))
+sub_seurat_obj <- CreateSeuratObject(GetAssayData(sub_seurat_obj, assay = "RNA", slot = "counts"))
+loom <- as.loom(sub_seurat_obj, filename = opt$output)
