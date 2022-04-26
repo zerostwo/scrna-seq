@@ -35,7 +35,7 @@ option_list <- list(
     action = "store",
     help = "MSigDB"
   ),
-    make_option(
+  make_option(
     c("-s", "--species"),
     type = "character",
     default = FALSE,
@@ -70,6 +70,7 @@ genesets <- msigdbr::msigdbr(
 
 res <- list()
 for (cell.type in cell.types) {
+  print(cell.type)
   # cell.type <- cell.types[1]
   filtered.deg <- deg %>%
     filter(cell_type == cell.type) %>%
@@ -80,11 +81,12 @@ for (cell.type in cell.types) {
     filtered.deg[order(filtered.deg$avg_log2FC, decreasing = T), ]
   genelist <-
     structure(filtered.deg$avg_log2FC, names = rownames(filtered.deg))
+  genelist <- genelist[genelist != 0]
   tmp.res <- clusterProfiler::GSEA(
     genelist,
     TERM2GENE = genesets,
     # eps = 0,
-    # pvalueCutoff = 1,
+    pvalueCutoff = 1,
     seed = 717
   )
   # result <- tryCatch(
