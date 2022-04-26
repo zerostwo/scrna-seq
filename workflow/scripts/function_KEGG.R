@@ -106,17 +106,23 @@ upregulated_res <- map(cell.types, function(x) {
       avg_log2FC >= opt$log2fc
     ) %>%
     pull(gene)
+  if (length(upregulated_gene) == 0) {
+    return(NULL)
+  }
   print(upregulated_gene)
   print(opt$species)
   bp <- enrich_go(upregulated_gene, opt$species)
 })
 names(upregulated_res) <- cell.types
 upregulated_res_df <- map_df(cell.types, function(x) {
-  upregulated.tmp.term <- upregulated_res[[x]]@result
-  upregulated.tmp.term$cell_type <- x
-  upregulated.tmp.term$regulated <- "upregulated"
-  return(upregulated.tmp.term)
+  if (!is.null(upregulated_res[[x]])) {
+    upregulated.tmp.term <- upregulated_res[[x]]@result
+    upregulated.tmp.term$cell_type <- x
+    upregulated.tmp.term$change <- "Upregulated"
+    return(upregulated.tmp.term)
+  }
 })
+print("==== Downregulated ====")
 # Downregulated gene
 downregulated_res <- map(cell.types, function(x) {
   print(x)
@@ -126,21 +132,34 @@ downregulated_res <- map(cell.types, function(x) {
       avg_log2FC <= -opt$log2fc
     ) %>%
     pull(gene)
+  if (length(downregulated_gene) == 0) {
+    return(NULL)
+  }
   print(downregulated_gene)
   print(opt$species)
   bp <- enrich_go(downregulated_gene, opt$species)
 })
 names(downregulated_res) <- cell.types
 downregulated_res_df <- map_df(cell.types, function(x) {
-  downregulated.tmp.term <- downregulated_res[[x]]@result
-  downregulated.tmp.term$cell_type <- x
-  downregulated.tmp.term$regulated <- "downregulated"
-  return(downregulated.tmp.term)
+  if (!is.null(downregulated_res[[x]])) {
+    downregulated.tmp.term <- downregulated_res[[x]]@result
+    downregulated.tmp.term$cell_type <- x
+    downregulated.tmp.term$change <- "Downregulated"
+    return(downregulated.tmp.term)
+  }
 })
 res_df <- upregulated_res_df %>% bind_rows(downregulated_res_df)
 #### Save results ----
+output <- opt$output
 write_csv(res_df,
-  file = opt$output
+  file = output
 )
+# upregulated_res
+upregulated_res_output <- output %>% str_replace(".csv", ".upregulated.rds")
+saveRDS(upregulated_res, upregulated_res_output)
+# downregulated_res
+downregulated_res_output <- output %>% str_replace(".csv", ".downregulated.rds")
+saveRDS(downregulated_res, downregulated_res_output)
+
 #### test ----
 # Rscript workflow/scripts/function_KEGG.R -i ./results/test_data/deg/METTL3_group.wilcox.deg.csv -o ./enrich_kegg.csv -p 0.05 -f 0.25 -s human
