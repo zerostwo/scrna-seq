@@ -9,11 +9,11 @@
 
 用于单细胞转录组分析的Snakemake工作流程
 
-## 作者
+## 🤪 作者
 
 * 段松岐, https://songqi.online
 
-## 分析模块
+## 📦 分析模块
 1. 差异分析
   该模块包括`差异基因分析`、`差异基因GO和KEGG通路富集`以及`差异基因排序后的GSEA分析`。
   差异分析使用`Seurat`包；功能富集及GSEA使用`clusterProfiler`包。
@@ -28,7 +28,7 @@
   该模块下使用`pyscenic`进行转录因子预测，并使用`limma`包对组间转录因子做差异分析。
 	输出路径：`./results/{sample}/scenic/`
 
-## 使用方法
+## 🕹️ 使用方法
 
 ### 1. 输入数据要求
 输入数据为Seurat对象的rds文件，Seurat对象的meta.data中应包括细胞类型`cell_type`和分组信息（例如：`group`，其下包括两个分组，例如Normal和Tumor）。
@@ -55,6 +55,8 @@ TEST_METHOD: wilcox
 ASSAY: RNA
 # 设置物种（可选：Homo sapiens或者Mus musculus）
 SPECIES: Homo sapiens
+# 打分方式（可选: GSVA，AddModuleScore或者AUCell）
+SCORE_METHOD: AddModuleScore
 #### 软件设置 ----
 # pyscenic路径
 PYSCENIC_PATH: /opt/pySCENIC/0.11.2/bin/pyscenic
@@ -83,7 +85,7 @@ snakemake -np
 snakemake --cores 10
 ```
 
-## 结果文件
+## 📂 结果文件
 
 程序完整运行后，会在`results`文件夹下生成结果。每个程序下通常会生成五个文件夹，结构如下：
 
@@ -98,7 +100,6 @@ test_data
 ├── logs
 ├── scenic
 └── score
-    └── GSVA
 ```
 
 - `benchmark`内包含了每个分析脚本运行消耗的CPU，内存及时间；
@@ -106,4 +107,4 @@ test_data
 - `function`内包含三个子文件夹，分别是GO和KEGG富集分析以及GSEA的结果；
 - `logs`内包含了每个分析脚本运行产生的日志文件；
 - `scenic`内包含转录因子预测以及组间差异分析结果；
-- `score`内包含一个子文件夹，为GSVA打分以及组件差异分析的结果。
+- `score`内包含一个子文件夹，为打分以及组件差异分析的结果。

@@ -1,19 +1,22 @@
 # Snakemake workflow: scrna-seq
 
 [![Snakemake][snakemake-badge]](snakemake-url)
+![Last commit][last-commit-badge]
+![Release][release-badge]
 [中文说明][zh-readme-url]
 
 [snakemake-badge]: https://img.shields.io/badge/snakemake-≥6.12.3-brightgreen.svg
 [snakemake-url]: https://snakemake.github.io
 [zh-readme-url]: README-zh.md
-
+[release-badge]: https://img.shields.io/github/v/release/zerostwo/scrna-seq
+[last-commit-badge]: https://img.shields.io/github/last-commit/zerostwo/scrna-seq
 A Snakemake workflow for single-cell RNA-seq analysis
 
-## Authors
+## 🤪 Authors
 
 * Songqi Duan, https://songqi.online
 
-## Analysis module
+## 📦 Analysis module
 1. Difference analysis
   This module includes `Differential Gene Analysis`, `GO and KEGG Pathway Enrichment`, and `GSEA`.
   The `Seurat` package was used for differentially expressed gene analysis; the `clusterProfiler` package was used for functional enrichment and GSEA.
@@ -25,7 +28,7 @@ A Snakemake workflow for single-cell RNA-seq analysis
 3. Transcription factor prediction
   This module uses `pyscenic` for transcription factor prediction, and uses the `limma` package for differential analysis of transcription factors between groups.
 
-## Usage
+## 🕹️ Usage
 
 ### 1. Input data request
 The input data is the `rds` file of the Seurat object. The `meta.data` of the Seurat object should include cell type `cell_type` and group information (for example: `group`, which includes two groups, such as Normal and Tumor).
@@ -52,6 +55,8 @@ TEST_METHOD: wilcox
 ASSAY: RNA
 # Set your species (optional: Homo sapiens or Mus musculus)
 SPECIES: Homo sapiens
+# Score method (optional: GSVA, AddModuleScore, AUCell)
+SCORE_METHOD: AddModuleScore
 #### Software settings ----
 # pyscenic path
 PYSCENIC_PATH: /opt/pySCENIC/0.11.2/bin/pyscenic
@@ -82,7 +87,7 @@ snakemake -np
 snakemake --cores 10
 ```
 
-## Result file description
+## 📂 Result file description
 
 After the program is fully run, the results are generated under the `results` folder. Five folders are usually generated under each program, the structure is as follows:
 
@@ -97,7 +102,6 @@ test_data
 ├── logs
 ├── scenic
 └── score
-    └── GSVA
 ```
 
 - `benchmark` contains the CPU, memory and time consumed by each analysis script;

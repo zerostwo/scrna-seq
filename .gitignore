@@ -4,3 +4,4 @@ resources/
 results/
 dask-worker-space/
 config/config_*
+run.sh
